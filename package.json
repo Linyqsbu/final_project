@@ -9,6 +9,15 @@
       "server": "nodemon",
       "start": " concurrently \"npm:server\" \"npm:client\" "
     },
+    "repository":{
+      "type":"git",
+      "url":"https://github.com/Linyqsbu/final_project.git"
+    },
+    "author":"",
+    "bugs":{
+      "url": "https://github.com/Linyqsbu/final_project/issues"
+    },
+    "license" : "ISC",
     "dependencies": {
       "@apollo/client": "^3.3.7",
       "apollo-server": "^2.14.5",
