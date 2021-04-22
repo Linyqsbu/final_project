@@ -2,8 +2,9 @@ import{WInput, WModal, WMHeader, WMMain, WMFooter, WRow, WButton} from 'wt-front
 import {useState} from 'react';
 import {REGISTER} from '../../cache/mutations';
 import { useMutation } from '@apollo/client';
-
+import {useHistory} from 'react-router-dom';
 const CreateAccountScreen = (props) =>{
+    const history = useHistory();
     const[input, setInput] = useState({email:'', password:'', name:''});
     const[loading, toggleLoading] = useState(false);
     const[Register] = useMutation(REGISTER);
@@ -30,12 +31,14 @@ const CreateAccountScreen = (props) =>{
             console.log(data);
             toggleLoading(false);
         }
+
+        history.push('/map_selection');
     }
 
     return(
         <div>
             <WModal visible={true}>
-                <WMHeader>
+                <WMHeader onClose={()=>{history.push('/welcome');}}>
                     Create a New Account
                 </WMHeader>
                 <WMMain>

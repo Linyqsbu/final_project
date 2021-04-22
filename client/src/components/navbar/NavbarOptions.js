@@ -1,10 +1,10 @@
 import {WButton, WNavItem} from 'wt-frontend';
 import{useHistory} from 'react-router-dom';
+import {useMutation, useApolloClient} from '@apollo/client';
+import {LOGOUT} from '../../cache/mutations';
 
 const LoggedOut = (props) =>{
     const history = useHistory();
-    
-
     return(
         <div>
             <WNavItem>
@@ -13,7 +13,7 @@ const LoggedOut = (props) =>{
                 </WButton>
             </WNavItem>
             <WNavItem>
-                <WButton>
+                <WButton onClick={()=>{history.push('/log_in');}}>
                     Login
                 </WButton>
             </WNavItem>
@@ -21,9 +21,29 @@ const LoggedOut = (props) =>{
     );
 };
 
+const LoggedIn = (props) => {
+    const client = useApolloClient();
+    const[Logout] = useMutation(LOGOUT);
+
+    const handleLogout = async (e) => {
+        Logout();
+    };
+    
+    return(
+        <WNavItem>
+            <WButton>
+                Logout
+            </WButton>
+        </WNavItem>
+    )
+}
 const NavbarOptions = (props) =>{
     return(
-        <LoggedOut/>
+        <div>
+            {
+                props.auth === false ? <LoggedOut/>:<LoggedIn/>
+            }
+        </div>
     );
 };
 
