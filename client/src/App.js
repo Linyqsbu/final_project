@@ -5,8 +5,10 @@ import { useQuery } 	from '@apollo/client';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { WNavbar, WSidebar, WNavItem, WModal } 	from 'wt-frontend';
 import { WLayout, WLHeader, WLMain, WLSide } from 'wt-frontend';
-import Logo from './components/navbar/Logo';
+import NavbarOptions from './components/navbar/NavbarOptions';
+import Logo from './components/navbar/Logo'
 import Welcome from './components/welcome/Welcome';
+import CreateAccountScreen from './components/account_screens/CreateAccountScreen';
 const App = () => {
   /*
 	let user = null;
@@ -25,9 +27,32 @@ s
 
   return(
     <WLayout wLayout="header">
-          <WNavbar color = "colored">  
-            <Logo/>
-          </WNavbar>
+      <BrowserRouter>
+        <WNavbar style={{backgroundColor:'black'}}>
+          <ul>
+            <WNavItem>
+              <Logo/>
+            </WNavItem>
+          </ul>
+
+          <ul>
+              <NavbarOptions/>
+          </ul>
+        </WNavbar>
+
+      
+        <Switch>
+          <Redirect exact from="/" to={{pathname:"/welcome"}}/>
+          <Route path="/welcome" name="welcome">
+            <Welcome/>
+          </Route>
+
+          <Route path="/create_account" name="create_account">
+            <CreateAccountScreen/>
+          </Route>
+
+        </Switch>
+      </BrowserRouter>
     </WLayout>
   );
 

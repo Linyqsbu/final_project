@@ -7,18 +7,12 @@ const userSchema = new Schema(
 			type: ObjectId,
 			required: true
 		},
-		firstName: {
-			type: String,
+
+		name:{
+			type:String,
 			required: true
 		},
-		lastName: {
-			type: String,
-			required: true
-		},
-		initials: {
-			type: String,
-			required: true
-		},
+
 		email: {
 			type: String,
 			required: true

@@ -8,8 +8,6 @@ module.export = {
 			if(!_id) { return([])};
 			const maps = await Map.find({owner: _id});
 			return (maps);
-			
-			
 		},
 
 		/** 
@@ -24,5 +22,5 @@ module.export = {
 			else return ({});
 		},
 	
-    },
+    }
 }

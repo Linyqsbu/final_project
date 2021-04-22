@@ -2,7 +2,7 @@ const { model, Schema, ObjectId} = require("mongoose");
 
 const regionSchema = new Schema({
         _id:{
-            type:ObjetId,
+            type:ObjectId,
             required:true
         },
 
@@ -28,10 +28,11 @@ const regionSchema = new Schema({
         },
         
         landmarks:[String],
-        subregions:[Region]
     },
     {timestamps:true}
 );
+
+regionSchema.add({subregions:[regionSchema]});
 
 const Region = model('Region', regionSchema);
 module.exports=Region;
