@@ -50,9 +50,9 @@ const typeDefs = gql`
         name: String!
         capital: String!
         leader: String!
-        flag: png
+        flag: String
         landmarks: [String]
-        parentRegion: Region
+        parentRegionId: String!
         subregions: [RegionInput]
     }
 `
