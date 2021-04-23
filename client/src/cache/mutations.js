@@ -38,3 +38,9 @@ export const ADDMAP = gql`
 		addMap(map:$map)
 	}
 `;
+
+export const DELETEMAP = gql`
+	mutation DeleteMap($_id: String!){
+		deleteMap(_id:$_id)
+	}
+`;

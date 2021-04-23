@@ -19,7 +19,6 @@ const LogInScreen = (props) => {
     }
 
     const handleLogin = async (e) => {
-        console.log(input);
         const{loading, error, data} = await Login({variables:{...input}});
         if(loading){toggleLoading(true)};
         console.log(data);

@@ -14,7 +14,12 @@ const MapSelectionScreen = (props) => {
                     <WLSide  side="left" style={{ backgroundColor:"pink"}}>
                         {
                             props.maps.map(map => (
-                                <MapEntry name={map.name} key={map._id}/>
+                                <MapEntry 
+                                toggleShowDelete = {props.toggleShowDelete} 
+                                map={map} 
+                                key={map._id}
+                                setActiveMap={props.setActiveMap}
+                                />
                             ))
                         }
                     </WLSide>
@@ -24,7 +29,7 @@ const MapSelectionScreen = (props) => {
                             Create New Map
                         </WButton>
                     </WLMain>
-                </WLayout>
+                </WLayout> 
             </div>
         </div>
     );

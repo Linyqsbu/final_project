@@ -28,6 +28,7 @@ const LoggedIn = (props) => {
 
     const handleLogout = async (e) => {
         Logout();
+        console.log(props.fetchUser);
         const {data} = await props.fetchUser();
         console.log(data);
         if(data){

@@ -1,9 +1,10 @@
 import React 			from 'react';
 import {useMutation, useQuery } 	from '@apollo/client';
+import {useState} from 'react';
 import * as queries 	from './cache/queries';
 //import { jsTPS } 		from './utils/jsTPS';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import { WNavbar, WLayout, WNavItem } 	from 'wt-frontend';
+import { WNavbar, WLayout, WNavItem, WModal, WMHeader, WMFooter, WButton } 	from 'wt-frontend';
 import NavbarOptions from './components/navbar/NavbarOptions';
 import Logo from './components/navbar/Logo'
 import Welcome from './components/welcome/Welcome';
@@ -11,11 +12,14 @@ import CreateAccountScreen from './components/account_screen/CreateAccountScreen
 import MapSelectionScreen from './components/map_selection_screen/MapSelectionScreen';
 import LogInScreen from './components/account_screen/LogInScreen';
 import UpdateAccountScreen from './components/account_screen/UpdateAccountScreen';
-import { PromiseProvider } from 'mongoose';
 import * as mutations from './cache/mutations';
 
 const App = () => {
   const[AddNewMap] = useMutation(mutations.ADDMAP);
+  const[DeleteMap] = useMutation(mutations.DELETEMAP);
+
+  const[showDelete, toggleShowDelete] = useState(false);
+  const[activeMap, setActiveMap] = useState({});
 
 	let user = null;
   //let transactionStack = new jsTPS();
@@ -30,18 +34,20 @@ const App = () => {
   }
   
   let maps=[];
+
   const {loading:loadingM, error: errorM, data: dataM, refetch: fetchMaps} = useQuery(queries.GET_DB_MAPS);
   if(loadingM){console.log(loadingM, 'loading');}
   if(errorM){console.log(errorM, 'error');}
-  if(dataM) {maps=dataM.getAllMaps;}
-  
+  if(dataM) {maps = dataM.getAllMaps;}
 
   const refetchMaps = async (refetch) => {
-    const{data}  = await refetch();
+    const {data} = await refetch();
+    console.log("data ", data);
     if(data){
-      maps=data.getAllmaps;
+      maps = data.getAllmaps;
     }
   }
+  
   
 
   const createNewMap = async () => {
@@ -56,7 +62,13 @@ const App = () => {
 
     const {data} = await AddNewMap({variables:{map:newMap}})
     console.log(data);
-    await fetchMaps();
+    refetchMaps(fetchMaps);
+  }
+  
+  const deleteMap = async () => {
+    const{data} = await DeleteMap({variables:{_id: activeMap._id}});
+    refetchMaps(fetchMaps);
+    toggleShowDelete(false);
   }
   
 
@@ -91,14 +103,36 @@ const App = () => {
           </Route>
 
           <Route path="/map_selection" name="map_selection">
-            <MapSelectionScreen maps={maps} createNewMap={createNewMap}/>
+            <MapSelectionScreen 
+              toggleShowDelete={toggleShowDelete}
+              maps={maps} 
+              createNewMap={createNewMap}
+              setActiveMap={setActiveMap}
+            />
           </Route>
 
           <Route path="/update_account" name="update_account">
             <UpdateAccountScreen fetchUser={refetchUser} user={user}/>
           </Route>
+        </Switch>   
 
-        </Switch>
+        {
+          showDelete && (<div>
+                          <WModal visible={true}>
+                              <WMHeader>
+                              Delete
+                              </WMHeader>
+                              <WMFooter>
+                              <WButton onClick = {deleteMap}>
+                                  Delete
+                              </WButton>
+                              <WButton onClick={() => {toggleShowDelete(false)}}>
+                                  Cancel
+                              </WButton>
+                              </WMFooter>
+                          </WModal>
+                          </div>)
+                }      
       </BrowserRouter>
     </WLayout>
   );
