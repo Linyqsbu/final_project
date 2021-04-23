@@ -72,6 +72,16 @@ module.exports = {
 			return user;
 		},
 
+		update: async (_, args, {res}) => {
+			const{_id, email, password, name } = args;
+			const userId = new ObjectId(_id);
+			const hashed = await bcrypt.hash(password, 10);
+			const updated = await User.updateOne({_id:userId}, {email:email, password:hashed, name:name});
+			if(updated) return ("User updated successfully");
+			else return ("User not updated");
+			
+		},
+
 		/** 
 			@param 	 {object} res - response object containing the current access/refresh tokens  
 			@returns {boolean} true 

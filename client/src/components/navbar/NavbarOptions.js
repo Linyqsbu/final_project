@@ -39,9 +39,16 @@ const LoggedIn = (props) => {
     
     return(
         <WNavItem>
-            <WButton onClick={handleLogout}>
-                Logout
-            </WButton>
+            <WNavItem>
+                <WButton onClick={()=>history.push('/update_account')}>
+                    {props.user.name}
+                </WButton>
+            </WNavItem>
+            <WNavItem>
+                <WButton onClick={handleLogout}>
+                    Logout
+                </WButton>
+            </WNavItem>
         </WNavItem>
     )
 }
@@ -49,7 +56,7 @@ const NavbarOptions = (props) =>{
     return(
         <div>
             {
-                props.auth === false ? <LoggedOut/>:<LoggedIn fetchUser={props.fetchUser}/>
+                props.auth === false ? <LoggedOut/>:<LoggedIn user={props.user} fetchUser={props.fetchUser}/>
             }
         </div>
     );

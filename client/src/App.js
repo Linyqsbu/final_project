@@ -11,6 +11,7 @@ import Welcome from './components/welcome/Welcome';
 import CreateAccountScreen from './components/account_screen/CreateAccountScreen';
 import MapSelectionScreen from './components/map_selection_screen/MapSelectionScreen';
 import LogInScreen from './components/account_screen/LogInScreen';
+import UpdateAccountScreen from './components/account_screen/UpdateAccountScreen';
 const App = () => {
   
 	let user = null;
@@ -60,7 +61,10 @@ const App = () => {
           <Route path="/map_selection" name="map_selection">
             <MapSelectionScreen/>
           </Route>
-    
+
+          <Route path="/update_account" name="update_account">
+            <UpdateAccountScreen fetchUser={refetchUser} user={user}/>
+          </Route>
 
         </Switch>
       </BrowserRouter>
