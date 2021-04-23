@@ -46,6 +46,15 @@ module.exports = {
 			const deleted = await Map.deleteOne({_id: objectId});
 			if(deleted) return true;
 			else return false;
+		},
+
+		editMapName: async(_, args) => {
+			const{_id, newName} = args;
+			const mapId = new ObjectId(_id);
+			const updated = await Map.updateOne({_id:mapId}, {name:newName});
+			if(updated) return mapId;
+			else return ("Map not updated");
+			
 		}
 	}
 }

@@ -17,6 +17,7 @@ import * as mutations from './cache/mutations';
 const App = () => {
   const[AddNewMap] = useMutation(mutations.ADDMAP);
   const[DeleteMap] = useMutation(mutations.DELETEMAP);
+  const[EditMapName] = useMutation(mutations.EDITMAPNAME);
 
   const[showDelete, toggleShowDelete] = useState(false);
   const[activeMap, setActiveMap] = useState({});
@@ -70,6 +71,11 @@ const App = () => {
     refetchMaps(fetchMaps);
     toggleShowDelete(false);
   }
+
+  const editMapName = async (mapId, name) => {
+    const{data} = await EditMapName({variables:{_id:mapId, newName:name}});
+    refetchMaps(fetchMaps);
+  }
   
 
   return(
@@ -104,6 +110,7 @@ const App = () => {
 
           <Route path="/map_selection" name="map_selection">
             <MapSelectionScreen 
+              editMapName={editMapName}
               toggleShowDelete={toggleShowDelete}
               maps={maps} 
               createNewMap={createNewMap}
@@ -132,7 +139,7 @@ const App = () => {
                               </WMFooter>
                           </WModal>
                           </div>)
-                }      
+        }      
       </BrowserRouter>
     </WLayout>
   );

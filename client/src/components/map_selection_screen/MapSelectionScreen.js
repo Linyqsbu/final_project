@@ -15,6 +15,7 @@ const MapSelectionScreen = (props) => {
                         {
                             props.maps.map(map => (
                                 <MapEntry 
+                                editMapName={props.editMapName}
                                 toggleShowDelete = {props.toggleShowDelete} 
                                 map={map} 
                                 key={map._id}
