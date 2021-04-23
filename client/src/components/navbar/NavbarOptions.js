@@ -22,16 +22,24 @@ const LoggedOut = (props) =>{
 };
 
 const LoggedIn = (props) => {
+    const history = useHistory();
     const client = useApolloClient();
     const[Logout] = useMutation(LOGOUT);
 
     const handleLogout = async (e) => {
         Logout();
+        const {data} = await props.fetchUser();
+        console.log(data);
+        if(data){
+            let reset = await client.resetStore();
+            if(reset) history.push('/welcome');
+        }
+
     };
     
     return(
         <WNavItem>
-            <WButton>
+            <WButton onClick={handleLogout}>
                 Logout
             </WButton>
         </WNavItem>
@@ -41,7 +49,7 @@ const NavbarOptions = (props) =>{
     return(
         <div>
             {
-                props.auth === false ? <LoggedOut/>:<LoggedIn/>
+                props.auth === false ? <LoggedOut/>:<LoggedIn fetchUser={props.fetchUser}/>
             }
         </div>
     );

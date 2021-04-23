@@ -30,6 +30,13 @@ const CreateAccountScreen = (props) =>{
         if(data){
             console.log(data);
             toggleLoading(false);
+
+            if(data.register.email === 'already exists') {
+				alert('User with that email already registered');
+			}
+			else {
+				props.fetchUser();
+			}
         }
 
         history.push('/map_selection');

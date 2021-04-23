@@ -29,6 +29,7 @@ const LogInScreen = (props) => {
         }
 
         if(data){
+            props.fetchUser();
             history.push("/map_selection");
         }
     }

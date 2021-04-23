@@ -16,7 +16,7 @@ const App = () => {
 	let user = null;
   //let transactionStack = new jsTPS();
 	
-  const { loading, error, data, refetch } = useQuery(queries.GET_DB_USER);
+  const { loading, error, data, refetch:refetchUser } = useQuery(queries.GET_DB_USER);
 
   if(error) { console.log(error); }
 	if(loading) { console.log(loading); }
@@ -25,7 +25,7 @@ const App = () => {
 		if(getCurrentUser !== null) { user = getCurrentUser; }
   }
   
-
+  
 
   return(
     <WLayout wLayout="header">
@@ -38,7 +38,7 @@ const App = () => {
           </ul>
 
           <ul>
-              <NavbarOptions user={user} auth = {user===null? false: true}/>
+              <NavbarOptions fetchUser={refetchUser} user={user} auth = {user===null? false: true}/>
           </ul>
         </WNavbar>
 
@@ -50,17 +50,17 @@ const App = () => {
           </Route>
 
           <Route path="/create_account" name="create_account">
-            <CreateAccountScreen/>
+            <CreateAccountScreen fetchUser={refetchUser}/>
           </Route>
 
           <Route path="/log_in" name="log_in">
-            <LogInScreen/>
+            <LogInScreen fetchUser={refetchUser}/>
           </Route>
 
           <Route path="/map_selection" name="map_selection">
             <MapSelectionScreen/>
           </Route>
-
+    
 
         </Switch>
       </BrowserRouter>
