@@ -38,7 +38,7 @@ const LoggedIn = (props) => {
     };
     
     return(
-        <WNavItem>
+        <div>
             <WNavItem>
                 <WButton onClick={()=>history.push('/update_account')}>
                     {props.user.name}
@@ -49,7 +49,7 @@ const LoggedIn = (props) => {
                     Logout
                 </WButton>
             </WNavItem>
-        </WNavItem>
+        </div>
     )
 }
 const NavbarOptions = (props) =>{

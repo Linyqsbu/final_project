@@ -1,10 +1,9 @@
 import React 			from 'react';
-import { useQuery } 	from '@apollo/client';
+import {useMutation, useQuery } 	from '@apollo/client';
 import * as queries 	from './cache/queries';
 //import { jsTPS } 		from './utils/jsTPS';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import { WNavbar, WSidebar, WNavItem, WModal } 	from 'wt-frontend';
-import { WLayout, WLHeader, WLMain, WLSide } from 'wt-frontend';
+import { WNavbar, WLayout, WNavItem } 	from 'wt-frontend';
 import NavbarOptions from './components/navbar/NavbarOptions';
 import Logo from './components/navbar/Logo'
 import Welcome from './components/welcome/Welcome';
@@ -12,8 +11,12 @@ import CreateAccountScreen from './components/account_screen/CreateAccountScreen
 import MapSelectionScreen from './components/map_selection_screen/MapSelectionScreen';
 import LogInScreen from './components/account_screen/LogInScreen';
 import UpdateAccountScreen from './components/account_screen/UpdateAccountScreen';
+import { PromiseProvider } from 'mongoose';
+import * as mutations from './cache/mutations';
+
 const App = () => {
-  
+  const[AddNewMap] = useMutation(mutations.ADDMAP);
+
 	let user = null;
   //let transactionStack = new jsTPS();
 	
@@ -26,6 +29,35 @@ const App = () => {
 		if(getCurrentUser !== null) { user = getCurrentUser; }
   }
   
+  let maps=[];
+  const {loading:loadingM, error: errorM, data: dataM, refetch: fetchMaps} = useQuery(queries.GET_DB_MAPS);
+  if(loadingM){console.log(loadingM, 'loading');}
+  if(errorM){console.log(errorM, 'error');}
+  if(dataM) {maps=dataM.getAllMaps;}
+  
+
+  const refetchMaps = async (refetch) => {
+    const{data}  = await refetch();
+    if(data){
+      maps=data.getAllmaps;
+    }
+  }
+  
+
+  const createNewMap = async () => {
+    console.log("create new map");
+    
+    let newMap = {
+      _id:'',
+      name:"New Map",
+      owner: user._id,
+      subregions:[],
+    };
+
+    const {data} = await AddNewMap({variables:{map:newMap}})
+    console.log(data);
+    await fetchMaps();
+  }
   
 
   return(
@@ -59,7 +91,7 @@ const App = () => {
           </Route>
 
           <Route path="/map_selection" name="map_selection">
-            <MapSelectionScreen/>
+            <MapSelectionScreen maps={maps} createNewMap={createNewMap}/>
           </Route>
 
           <Route path="/update_account" name="update_account">

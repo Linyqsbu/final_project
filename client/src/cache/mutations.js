@@ -32,3 +32,9 @@ export const LOGOUT = gql`
 		logout
 	}
 `;
+
+export const ADDMAP = gql`
+	mutation AddMap($map: MapInput!){
+		addMap(map:$map)
+	}
+`;

@@ -48,7 +48,7 @@ const LogInScreen = (props) => {
 
                 <WRow>
                     Password:
-                    <WInput name="password" onBlur={updateInput}/>
+                    <WInput name="password" onBlur={updateInput} inputType='password'/>
                 </WRow>
             </WMMain>
 
