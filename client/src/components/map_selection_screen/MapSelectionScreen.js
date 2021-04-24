@@ -1,7 +1,13 @@
-import {WLayout, WLHeader, WLSide, WLMain, WButton} from 'wt-frontend';
+import {WLayout, WLHeader, WLSide, WLMain, WButton, WModal, WMHeader,WMFooter} from 'wt-frontend';
 import MapEntry from './MapEntry';
-const MapSelectionScreen = (props) => {
+import {useQuery, useMutation} from '@apollo/client';
+import * as queries from '../../cache/queries'
+import * as mutations from '../../cache/mutations';
+import {useState} from "react";
 
+const MapSelectionScreen = (props) => {
+    
+    
 
     return(
         <div>
@@ -15,11 +21,12 @@ const MapSelectionScreen = (props) => {
                         {
                             props.maps.map(map => (
                                 <MapEntry 
-                                editMapName={props.editMapName}
-                                toggleShowDelete = {props.toggleShowDelete} 
-                                map={map} 
-                                key={map._id}
-                                setActiveMap={props.setActiveMap}
+                                    handleSetActiveMap = {props.handleSetActiveMap}
+                                    editMapName={props.editMapName}
+                                    toggleShowDelete = {props.toggleShowDelete} 
+                                    map={map}
+                                    key={map._id}
+                                    setActiveMap={props.setActiveMap}
                                 />
                             ))
                         }
@@ -30,6 +37,8 @@ const MapSelectionScreen = (props) => {
                             Create New Map
                         </WButton>
                     </WLMain>
+
+                    
                 </WLayout> 
             </div>
         </div>

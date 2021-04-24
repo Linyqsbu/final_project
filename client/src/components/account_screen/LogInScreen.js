@@ -21,14 +21,14 @@ const LogInScreen = (props) => {
     const handleLogin = async (e) => {
         const{loading, error, data} = await Login({variables:{...input}});
         if(loading){toggleLoading(true)};
-        console.log(data);
+        console.log("Handle login", data);
         if(data.login._id === null){
             displayErrorMsg(true);
             return;
         }
 
         if(data){
-            props.fetchUser();
+            await props.fetchUser();
             history.push("/map_selection");
         }
     }

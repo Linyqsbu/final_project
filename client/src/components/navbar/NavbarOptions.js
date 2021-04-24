@@ -27,15 +27,12 @@ const LoggedIn = (props) => {
     const[Logout] = useMutation(LOGOUT);
 
     const handleLogout = async (e) => {
-        Logout();
-        console.log(props.fetchUser);
+        await Logout();
         const {data} = await props.fetchUser();
-        console.log(data);
         if(data){
             let reset = await client.resetStore();
             if(reset) history.push('/welcome');
         }
-
     };
     
     return(
