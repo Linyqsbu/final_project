@@ -16,6 +16,7 @@ const App = () => {
         if(getCurrentUser !== null) { user = getCurrentUser; }
     }
 
+    
     return(
         <div>
             <Screen refetchUser = {refetch} user = {user}/>

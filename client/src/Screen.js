@@ -12,8 +12,9 @@ import CreateAccountScreen from './components/account_screen/CreateAccountScreen
 import MapSelectionScreen from './components/map_selection_screen/MapSelectionScreen';
 import LogInScreen from './components/account_screen/LogInScreen';
 import UpdateAccountScreen from './components/account_screen/UpdateAccountScreen';
+import RegionSpreadsheet from './components/region_spreadsheet/RegionSpreadsheet';
 import * as mutations from './cache/mutations';
-
+import {useHistory} from 'react-router-dom';
 const Screen = (props) => {
   
   const[AddNewMap] = useMutation(mutations.ADDMAP);
@@ -23,6 +24,8 @@ const Screen = (props) => {
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
 	
+  const history = useHistory();
+
   let maps=[];
 
   const {loading:loadingM, error: errorM, data: dataM, refetch: fetchMaps} = useQuery(queries.GET_DB_MAPS);
@@ -30,7 +33,9 @@ const Screen = (props) => {
   if(errorM){console.log(errorM, 'error');}
   if(dataM) {maps = dataM.getAllMaps;}
 
-  
+  console.log("User", props.user);
+  console.log("dataM", dataM);
+  console.log("Maps", maps);
 
   const refetchMaps = async (refetch) => {
     const {loading, error, data} = await refetch();
@@ -67,6 +72,7 @@ const Screen = (props) => {
   const handleSetActiveMap = async (mapId) => {
     const map = maps.find(map => map._id==mapId);
     setActiveMap(map);
+    history.push(`/region_spreadsheet/${map._id}`)
   }
 
   return(
@@ -75,7 +81,7 @@ const Screen = (props) => {
         <WNavbar style={{backgroundColor:'black'}}>
           <ul>
             <WNavItem>
-              <Logo/>
+              <Logo user={props.user}/>
             </WNavItem>
           </ul>
 
@@ -96,7 +102,12 @@ const Screen = (props) => {
           </Route>
 
           <Route path="/log_in" name="log_in">
-            <LogInScreen fetchUser={props.refetchUser}/>
+            <LogInScreen 
+              fetchUser={props.refetchUser}
+              fetchMaps={fetchMaps}
+              refetchMaps={refetchMaps}
+
+            />
           </Route>
 
           <Route path="/map_selection" name="map_selection">
@@ -108,12 +119,16 @@ const Screen = (props) => {
               deleteMap = {deleteMap}
               toggleShowDelete = {toggleShowDelete}
               setActiveMap = {setActiveMap}
-              
+              handleSetActiveMap={handleSetActiveMap}
             />
           </Route>
 
           <Route path="/update_account" name="update_account">
             <UpdateAccountScreen fetchUser={props.refetchUser} user={props.user}/>
+          </Route>
+
+          <Route path="/region_spreadsheet/:id">
+            <RegionSpreadsheet/>
           </Route>
 
         </Switch>   

@@ -12,11 +12,10 @@ const MapEntry = (props) =>{
 
     return(
         <div>
-            
             {
                 nameEdit
                 ? <WInput autoFocus={true} onBlur = {handleNameEdit} defaultValue={props.map.name} type="text"/>
-                : <span>{props.map.name}</span>
+                : <span onClick = {() => (props.handleSetActiveMap(props.map._id))}>{props.map.name}</span>
             }
 
             <WButton onClick={() => toggleNameEdit(true)}>

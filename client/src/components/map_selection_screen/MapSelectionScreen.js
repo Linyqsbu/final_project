@@ -27,6 +27,7 @@ const MapSelectionScreen = (props) => {
                                     map={map}
                                     key={map._id}
                                     setActiveMap={props.setActiveMap}
+                                    handleSetActiveMap={props.handleSetActiveMap}
                                 />
                             ))
                         }
