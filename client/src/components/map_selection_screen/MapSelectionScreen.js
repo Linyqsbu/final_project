@@ -4,10 +4,15 @@ import {useQuery, useMutation} from '@apollo/client';
 import * as queries from '../../cache/queries'
 import * as mutations from '../../cache/mutations';
 import {useState} from "react";
-
+import {useHistory} from 'react-router-dom'
 const MapSelectionScreen = (props) => {
-    
-    
+    const history = useHistory();
+
+    const handleSetActiveMap = async (mapId) => {
+        const map = props.maps.find(map => map._id==mapId);
+        props.setActiveMap(map);
+        history.push(`/region_spreadsheet/${map._id}`)
+      }
 
     return(
         <div>
@@ -27,7 +32,7 @@ const MapSelectionScreen = (props) => {
                                     map={map}
                                     key={map._id}
                                     setActiveMap={props.setActiveMap}
-                                    handleSetActiveMap={props.handleSetActiveMap}
+                                    handleSetActiveMap={handleSetActiveMap}
                                 />
                             ))
                         }

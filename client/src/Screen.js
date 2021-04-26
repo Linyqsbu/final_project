@@ -15,17 +15,19 @@ import UpdateAccountScreen from './components/account_screen/UpdateAccountScreen
 import RegionSpreadsheet from './components/region_spreadsheet/RegionSpreadsheet';
 import * as mutations from './cache/mutations';
 import {useHistory} from 'react-router-dom';
+
 const Screen = (props) => {
   
   const[AddNewMap] = useMutation(mutations.ADDMAP);
   const[DeleteMap] = useMutation(mutations.DELETEMAP);
   const[EditMapName] = useMutation(mutations.EDITMAPNAME);
+  const[AddRegion]  = useMutation(mutations.ADDREGION);
 
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
 	
-  const history = useHistory();
 
+  
   let maps=[];
 
   const {loading:loadingM, error: errorM, data: dataM, refetch: fetchMaps} = useQuery(queries.GET_DB_MAPS);
@@ -33,9 +35,6 @@ const Screen = (props) => {
   if(errorM){console.log(errorM, 'error');}
   if(dataM) {maps = dataM.getAllMaps;}
 
-  console.log("User", props.user);
-  console.log("dataM", dataM);
-  console.log("Maps", maps);
 
   const refetchMaps = async (refetch) => {
     const {loading, error, data} = await refetch();
@@ -69,11 +68,23 @@ const Screen = (props) => {
     toggleShowDelete(false);
   }
 
-  const handleSetActiveMap = async (mapId) => {
-    const map = maps.find(map => map._id==mapId);
-    setActiveMap(map);
-    history.push(`/region_spreadsheet/${map._id}`)
+  const addRegion = async () => {
+
+    const newRegion = {
+      _id:"",
+      name:"New Region",
+      capital:"Capital",
+      leader:"Leader",
+      flag:"Flag",
+      parentRegionId: activeMap._id,
+      landmarks:"[]"
+    }
+
+    const {data} = await AddRegion({variables:{region:newRegion, _id:activeMap._id}});
+    console.log(data);
+    refetchMaps(fetchMaps);
   }
+  
 
   return(
     <WLayout wLayout="header">
@@ -119,7 +130,6 @@ const Screen = (props) => {
               deleteMap = {deleteMap}
               toggleShowDelete = {toggleShowDelete}
               setActiveMap = {setActiveMap}
-              handleSetActiveMap={handleSetActiveMap}
             />
           </Route>
 
@@ -128,7 +138,10 @@ const Screen = (props) => {
           </Route>
 
           <Route path="/region_spreadsheet/:id">
-            <RegionSpreadsheet/>
+            <RegionSpreadsheet
+              maps={maps}
+              addRegion = {addRegion}
+            />
           </Route>
 
         </Switch>   

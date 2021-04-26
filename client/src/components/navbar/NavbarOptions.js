@@ -5,6 +5,7 @@ import {LOGOUT} from '../../cache/mutations';
 
 const LoggedOut = (props) =>{
     const history = useHistory();
+    
     return(
         <div>
             <WNavItem>
@@ -21,12 +22,12 @@ const LoggedOut = (props) =>{
     );
 };
 
-const LoggedIn = (props) => {
+export const LoggedIn = (props) => {
     const history = useHistory();
     const client = useApolloClient();
     const[Logout] = useMutation(LOGOUT);
 
-    const handleLogout = async (e) => {
+    const handleLogout = async () => {
         await Logout();
         const {data} = await props.fetchUser();
         if(data){

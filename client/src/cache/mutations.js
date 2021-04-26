@@ -50,3 +50,9 @@ export const EDITMAPNAME = gql`
 		editMapName(_id:$_id, newName:$newName)
 	}
 `;
+
+export const ADDREGION = gql`
+	mutation AddRegion($region: RegionInput!, $_id:String!){
+		addRegion(region:$region, _id:$_id)
+	}
+`;

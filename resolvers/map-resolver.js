@@ -57,6 +57,31 @@ module.exports = {
 			if(updated) return mapId;
 			else return ("Map not updated");
 			
+		},
+
+		addRegion: async(_, args) => {
+			const{region, _id} = args;
+			const mapId = new ObjectId(_id);
+			const found = await Map.findOne({_id:mapId});
+			const subregions = found.subregions;
+			const regionId = new ObjectId();
+
+			const newRegion = new Region({
+				_id: regionId,
+				name: region.name,
+				capital: region.capital,
+				leader: region.leader,
+				flag: region.flag,
+				landmarks: region.landmarks,
+				parentRegionId: region.parentRegionId,
+				subregions:[]
+			})
+
+			subregions.push(newRegion);
+			const updated = await Map.updateOne({_id:mapId}, {subregions:subregions});
+			newRegion.save();
+			if(updated) return mapId;
+			else return ("Subregion not added");
 		}
 	}
 }

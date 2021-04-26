@@ -2,14 +2,18 @@ import{WModal, WMHeader, WMMain, WMFooter, WRow, WInput, WButton} from "wt-front
 import{useHistory} from 'react-router-dom';
 import {UPDATE} from '../../cache/mutations';
 import {useState} from 'react';
-import {useMutation} from '@apollo/client';
+import {useMutation, useApolloClient} from '@apollo/client';
+import {LOGOUT} from '../../cache/mutations';
+
 
 const UpdateAccountScreen = (props) => {
     const history=useHistory();
     const[input, setInput] = useState({email:'', password:'', name:''});
     const[loading, toggleLoading] = useState(false);
     const[Update] = useMutation(UPDATE);
-    
+    const[Logout] = useMutation(LOGOUT);
+    const client = useApolloClient();
+
     const updateInput = (e) => {
         const{name, value} = e.target;
         const updated = {...input, [name]: value};
@@ -26,17 +30,14 @@ const UpdateAccountScreen = (props) => {
             }
         }
 
-        const{loading, error, data} = await Update({variables:{_id:props.user._id,...input}});
-        if(loading) {toggleLoading(true)};
-        if(error){return `Error: ${error.message}`};
+        await Update({variables:{_id:props.user._id,...input}});
+        await Logout();
+        const {data} = await props.fetchUser();
         if(data){
-            console.log(data);
-            toggleLoading(false);
-
-            props.fetchUser();
+            let reset = await client.resetStore();
+            if(reset) history.push('/welcome');
         }
-
-        history.push('/map_selection');
+        
     }
 
     return(
