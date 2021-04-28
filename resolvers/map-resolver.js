@@ -17,16 +17,30 @@ module.exports = {
 			@returns {object} a todolist on success and an empty object on failure
 		**/
 		getMapById: async (_, args) => {
+			console.log("getmapbyid");
 			const { _id } = args;
 			const objectId = new ObjectId(_id);
 			const map = await Map.findOne({_id: objectId});
 			if(map) return map;
 			else return ({});
 		},
+
+		getRegionById: async(_, args) => {
+			const{_id} = args;
+			const objectId = new Object(_id);
+			const region = await Region.findOne({_id: objectId});
+			if(region){
+				return region;
+			}
+			
+			return ({});
+			
+		}
     },
 
 	Mutation:{
 		addMap: async(_, args) => {
+			console.log("add map");
 			const{map} = args;
 			const objectId = new ObjectId();
 			const{name, owner, subregions} = map;
@@ -60,10 +74,10 @@ module.exports = {
 		},
 
 		addRegion: async(_, args) => {
-			const{region, _id} = args;
-			const mapId = new ObjectId(_id);
-			const found = await Map.findOne({_id:mapId});
-			const subregions = found.subregions;
+			console.log("addregion");
+			console.log("args", args);
+			const{region, _id, isMap} = args;
+			const parentId = new ObjectId(_id);
 			const regionId = new ObjectId();
 
 			const newRegion = new Region({
@@ -75,12 +89,29 @@ module.exports = {
 				landmarks: region.landmarks,
 				parentRegionId: region.parentRegionId,
 				subregions:[]
-			})
+			});
 
+			let found;
+			if(isMap){
+				
+				found = await Map.findOne({_id:parentId});
+			}
+			else{
+				found = await Region.findOne({_id:parentId});
+			}
+
+			const subregions = found.subregions;
 			subregions.push(newRegion);
-			const updated = await Map.updateOne({_id:mapId}, {subregions:subregions});
+
+			let updated;
+			
+			if(isMap)
+				updated = await Map.updateOne({_id:parentId}, {subregions:subregions});
+			else
+				updated = await Region.updateOne({_id:parentId}, {subregions:subregions});
 			newRegion.save();
-			if(updated) return mapId;
+
+			if(updated) return regionId;
 			else return ("Subregion not added");
 		}
 	}

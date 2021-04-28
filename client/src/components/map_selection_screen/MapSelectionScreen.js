@@ -12,7 +12,7 @@ const MapSelectionScreen = (props) => {
         const map = props.maps.find(map => map._id==mapId);
         props.setActiveMap(map);
         history.push(`/region_spreadsheet/${map._id}`)
-      }
+    }
 
     return(
         <div>

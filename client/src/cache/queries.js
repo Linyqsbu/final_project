@@ -54,3 +54,46 @@ export const GET_DB_MAPS = gql`
 		}
 	}
 `;
+
+export const GET_REGION_BY_ID = gql`
+	query GetRegionById($_id:String!){
+		getRegionById(_id:$_id){
+			_id
+			name
+			capital
+			leader
+			flag
+			parentRegionId
+			landmarks
+			subregions{
+				_id
+				name
+				capital
+				leader
+				flag
+				parentRegionId
+				landmarks
+			}
+			
+		}
+	}
+`;
+
+export const GET_MAP_BY_ID = gql`
+	query GetMapById($_id:String!){
+		getMapById(_id:$_id){
+			_id
+			name
+			owner
+			subregions{
+				_id
+				name
+				capital
+				leader
+				flag
+				parentRegionId
+				landmarks
+			}
+		}
+	}
+`;

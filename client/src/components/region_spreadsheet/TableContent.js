@@ -8,6 +8,7 @@ const TableContent = (props) => {
             {
                 props.subregions.map(subregion => (
                     <RegionEntry
+                        setIsMap = {props.setIsMap}
                         subregion = {subregion}
                         key = {subregion._id}
                     />)

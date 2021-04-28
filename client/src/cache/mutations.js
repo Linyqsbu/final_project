@@ -52,7 +52,7 @@ export const EDITMAPNAME = gql`
 `;
 
 export const ADDREGION = gql`
-	mutation AddRegion($region: RegionInput!, $_id:String!){
-		addRegion(region:$region, _id:$_id)
+	mutation AddRegion($region: RegionInput!, $_id:String!, $isMap:Boolean!){
+		addRegion(region:$region, _id:$_id, isMap:$isMap)
 	}
 `;

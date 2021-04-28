@@ -1,9 +1,17 @@
 import {WRow, WCol} from 'wt-frontend';
-
+import {useHistory} from 'react-router-dom';
 const RegionEntry = (props) => {
+    const history = useHistory();
+    
+    const handleNavigate = () => {
+        props.setIsMap(false);
+        history.push(`/region_spreadsheet/${props.subregion._id}`)
+        
+    }
+
     return(
         <WRow>
-            <WCol size="2">
+            <WCol onClick = {handleNavigate} size="2">
                 {props.subregion.name}
             </WCol>
             <WCol size="2">

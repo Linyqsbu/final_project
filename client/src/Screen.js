@@ -23,17 +23,19 @@ const Screen = (props) => {
   const[EditMapName] = useMutation(mutations.EDITMAPNAME);
   const[AddRegion]  = useMutation(mutations.ADDREGION);
 
+
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
-	
+
 
   
   let maps=[];
-
   const {loading:loadingM, error: errorM, data: dataM, refetch: fetchMaps} = useQuery(queries.GET_DB_MAPS);
   if(loadingM){return null;}
   if(errorM){console.log(errorM, 'error');}
   if(dataM) {maps = dataM.getAllMaps;}
+  
+  let subregions = [];
 
 
   const refetchMaps = async (refetch) => {
@@ -68,7 +70,7 @@ const Screen = (props) => {
     toggleShowDelete(false);
   }
 
-  const addRegion = async () => {
+  const addRegion = async (isMap, id) => {
 
     const newRegion = {
       _id:"",
@@ -76,14 +78,14 @@ const Screen = (props) => {
       capital:"Capital",
       leader:"Leader",
       flag:"Flag",
-      parentRegionId: activeMap._id,
+      parentRegionId: id,
       landmarks:"[]"
     }
 
-    const {data} = await AddRegion({variables:{region:newRegion, _id:activeMap._id}});
-    console.log(data);
-    refetchMaps(fetchMaps);
+    await AddRegion({variables:{region:newRegion, _id:id, isMap: isMap}});
   }
+
+  
   
 
   return(
@@ -141,6 +143,7 @@ const Screen = (props) => {
             <RegionSpreadsheet
               maps={maps}
               addRegion = {addRegion}
+              subregions={subregions}
             />
           </Route>
 
