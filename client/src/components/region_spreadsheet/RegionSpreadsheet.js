@@ -9,8 +9,9 @@ const RegionSpreadsheet = (props) => {
 
     const{id} = useParams();
     let map = props.maps.find(map => map._id===id);
-    const[isMap, setIsMap] = useState(map!==undefined);
-
+    const isMap = map!==undefined;
+    console.log("id", id);
+    console.log("isMap", isMap);
     /*
         let region = props.maps.find(map => map._id==id);
         const[isMap, setIsMap] = useState(region!==null);
@@ -46,12 +47,8 @@ const RegionSpreadsheet = (props) => {
             else
                 region = data.getRegionById;
 
-            console.log("data", data);
-            console.log("isMap", isMap);
-            console.log("region", region);
             
             subregions = region.subregions;
-            console.log("subregions", subregions);
         }
 
     }
@@ -90,7 +87,6 @@ const RegionSpreadsheet = (props) => {
             <RegionHeader/>
             <TableContent 
                 subregions = {subregions}
-                setIsMap={setIsMap}
             />
         </div>
     );

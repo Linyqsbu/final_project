@@ -60,6 +60,7 @@ module.exports = {
 			const {_id} = args;
 			const objectId = new ObjectId(_id);
 			const deleted = await Map.deleteOne({_id: objectId});
+			
 			if(deleted) return true;
 			else return false;
 		},

@@ -4,7 +4,6 @@ const RegionEntry = (props) => {
     const history = useHistory();
     
     const handleNavigate = () => {
-        props.setIsMap(false);
         history.push(`/region_spreadsheet/${props.subregion._id}`)
         
     }
