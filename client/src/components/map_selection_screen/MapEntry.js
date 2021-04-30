@@ -11,20 +11,24 @@ const MapEntry = (props) =>{
     }
 
     return(
-        <div>
+        <div className="map-entry">
+            <span className="map-entry-name">
             {
                 nameEdit
                 ? <WInput autoFocus={true} onBlur = {handleNameEdit} defaultValue={props.map.name} type="text"/>
-                : <span onClick = {() => (props.handleSetActiveMap(props.map._id))}>{props.map.name}</span>
+                : <span  onClick = {() => (props.handleSetActiveMap(props.map._id))}>{props.map.name}</span>
             }
+            </span>
+            
+            
 
-            <WButton onClick={() => toggleNameEdit(true)}>
+            <WButton className="map-entry-button" onClick={() => toggleNameEdit(true)}>
                 <i className="material-icons">
                     edit
                 </i>
             </WButton>
 
-            <WButton onClick = {() => {props.setActiveMap(props.map); props.toggleShowDelete(true);}}>
+            <WButton className="map-entry-button" onClick = {() => {props.setActiveMap(props.map); props.toggleShowDelete(true);}}>
                 <i className="material-icons">
                     delete
                 </i>

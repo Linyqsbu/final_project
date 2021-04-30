@@ -28,7 +28,7 @@ const Screen = (props) => {
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
 
-
+  console.log("user", props.user);
   
   let maps=[];
   const {loading:loadingM, error: errorM, data: dataM, refetch: fetchMaps} = useQuery(queries.GET_DB_MAPS);
@@ -106,7 +106,7 @@ const Screen = (props) => {
 
       
         <Switch>
-          <Redirect exact from="/" to={{pathname:`${props.user === null? "/map_selection":"/welcome"}`}}/>
+          <Redirect exact from="/" to={{pathname:`${props.user === null? "welcome":"/map_selection"}`}}/>
           <Route path="/welcome" name="welcome">
             <Welcome/>
           </Route>
