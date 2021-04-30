@@ -2,21 +2,21 @@ import {WRow, WCol, WButton} from 'wt-frontend';
 const RegionHeader = (props) => {
     
     return(
-        <WRow>
-            <WCol size = "2">
-                <WButton color="danger">Name</WButton>
+        <WRow >
+            <WCol className="header-col" size = "2">
+                <WButton  style={{color:"white"}} wType="texted" color="danger">Name</WButton>
             </WCol>
-            <WCol size = "2">
-                <WButton color="danger">Capital</WButton>
+            <WCol className="header-col" size = "2">
+                <WButton  style={{color:"white"}} wType="texted" color="danger">Capital</WButton>
             </WCol>
-            <WCol size = "2">
-                <WButton color="danger">Leader</WButton>
+            <WCol className="header-col" size = "2">
+                <WButton style={{color:"white"}} wType="texted" color="danger">Leader</WButton>
             </WCol>
-            <WCol size = "2">
-                <WButton color="danger">Flag</WButton>
+            <WCol className="header-col" size = "2">
+                <WButton style={{color:"white"}} wType="texted" color="danger">Flag</WButton>
             </WCol>
-            <WCol size = "2">
-                <WButton color="danger">Landmarks</WButton>
+            <WCol className="header-col" size = "4">
+                <WButton style={{color:"white"}} wType="texted" color="danger">Landmarks</WButton>
             </WCol>
         </WRow>
     );

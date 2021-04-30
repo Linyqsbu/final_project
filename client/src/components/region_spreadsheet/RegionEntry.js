@@ -10,19 +10,19 @@ const RegionEntry = (props) => {
 
     return(
         <WRow>
-            <WCol onClick = {handleNavigate} size="2">
+            <WCol className="region-entry" onClick = {handleNavigate} size="2">
                 {props.subregion.name}
             </WCol>
-            <WCol size="2">
+            <WCol className="region-entry" size="2">
                 {props.subregion.capital}
             </WCol>
-            <WCol size="2">
+            <WCol className="region-entry" size="2">
                 {props.subregion.leader}
             </WCol>
-            <WCol size="2">
+            <WCol className="region-entry" size="2">
                 {props.subregion.flag}
             </WCol>
-            <WCol size="2">
+            <WCol className="region-entry" size="4">
                 {props.subregion.landmarks}
             </WCol>
         </WRow>

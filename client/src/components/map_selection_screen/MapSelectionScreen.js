@@ -5,6 +5,7 @@ import * as queries from '../../cache/queries'
 import * as mutations from '../../cache/mutations';
 import {useState} from "react";
 import {useHistory} from 'react-router-dom'
+import globe from './globe.jpg';
 const MapSelectionScreen = (props) => {
     const history = useHistory();
 
@@ -39,7 +40,8 @@ const MapSelectionScreen = (props) => {
                     </WLSide>
 
                     <WLMain style={{backgroundColor:"white"}}>
-                        <WButton onClick={props.createNewMap}>
+                        <img src={globe} style={{width:"100%"}} />
+                        <WButton className="map-selection-button" onClick={props.createNewMap}>
                             Create New Map
                         </WButton>
                     </WLMain>

@@ -9,7 +9,7 @@ const LoggedOut = (props) =>{
     return(
         <div>
             <WNavItem>
-                <WButton style={{color:"purple"}} wType="texted" onClick={()=>{history.push('/create_account');}}>
+                <WButton style={{color:"violet"}} wType="texted" onClick={()=>{history.push('/create_account');}}>
                     Create Account
                 </WButton>
             </WNavItem>
@@ -39,12 +39,12 @@ export const LoggedIn = (props) => {
     return(
         <div>
             <WNavItem>
-                <WButton onClick={()=>history.push('/update_account')}>
+                <WButton style={{color:"violet"}} wType="texted" onClick={()=>history.push('/update_account')}>
                     {props.user.name}
                 </WButton>
             </WNavItem>
             <WNavItem>
-                <WButton onClick={handleLogout}>
+                <WButton style={{color:"white"}} wType="texted" onClick={handleLogout}>
                     Logout
                 </WButton>
             </WNavItem>

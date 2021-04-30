@@ -66,29 +66,32 @@ const RegionSpreadsheet = (props) => {
     const clickDisabled = () =>{}
 
     return(
-        <div>
-            <div>
-                <WButton onClick={handleAddRegion}>
-                    <i className = 'material-icons'>
+        <div className="region-spreadsheet-container">
+            <div style={{paddingBottom:"15px"}}>
+                <WButton style={{color:"green"}} wType="texted" onClick={handleAddRegion}>
+                    <i  className = 'material-icons region-spreadsheet-button'>
                         add
                     </i>
                 </WButton>
-                <WButton>
-                    <i className = 'material-icons'>
+                <WButton style={{color:"white"}} wType="texted">
+                    <i className = 'material-icons region-spreadsheet-button'>
                         undo
                     </i>
                 </WButton>
-                <WButton>
-                    <i className = 'material-icons'>
+                <WButton style={{color:"white"}} wType="texted">
+                    <i className = 'material-icons region-spreadsheet-button'>
                         redo
                     </i>
                 </WButton>
-                <div onClick = {isMap? clickDisabled: () => {history.push(`/region_viewer/${id}`)}}>
-                    Region Name: {region.name}
-                </div>
+                <span style={{fontSize:"30px", fontWeight:"bold", paddingLeft:"250px"}}>
+                Region Name:
+                    <span style={{color:"deepskyblue"}} onClick = {isMap? clickDisabled: () => {history.push(`/region_viewer/${id}`)}}>
+                        {region.name}
+                    </span>
+                </span>
             </div>
             <RegionHeader/>
-            <TableContent 
+            <TableContent
                 subregions = {subregions}
             />
         </div>

@@ -15,8 +15,8 @@ const MapEntry = (props) =>{
             <span className="map-entry-name">
             {
                 nameEdit
-                ? <WInput autoFocus={true} onBlur = {handleNameEdit} defaultValue={props.map.name} type="text"/>
-                : <span  onClick = {() => (props.handleSetActiveMap(props.map._id))}>{props.map.name}</span>
+                ? <WInput style={{color:"black", width:"100%", fontWeight:"bold"}} autoFocus={true} onBlur = {handleNameEdit} defaultValue={props.map.name} type="text"/>
+                : <span style={{cursor:"pointer"}} onClick = {() => (props.handleSetActiveMap(props.map._id))}>{props.map.name}</span>
             }
             </span>
             
