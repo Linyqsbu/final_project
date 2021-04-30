@@ -6,10 +6,10 @@ const Logo = (props) => {
 
     return (
         <div>
-            {!props.user? <div> World Data Mapper </div>:
-                <WButton color="accent" wType = "texted" onClick = {() => {history.push('/map_selection');}}>
-                    World Data Mapper
-                </WButton>
+            {!props.user? <div className="logo"> The World Data Mapper </div>:
+                <div className = "logo-button" onClick = {() => {history.push('/map_selection');}}>
+                    The World Data Mapper
+                </div>
             }
         </div>
     );

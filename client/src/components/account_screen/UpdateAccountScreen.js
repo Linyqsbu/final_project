@@ -42,23 +42,23 @@ const UpdateAccountScreen = (props) => {
 
     return(
         <div>
-            <WModal visible={true}>
-                <WMHeader onClose={()=> history.push('/map_selection')}> 
+            <WModal className = "modal" visible={true}>
+                <WMHeader className="modal-header" onClose={()=> history.push('/map_selection')}> 
                     Enter Updated Information
                 </WMHeader>
 
                 <WMMain>
                     <WRow>
                         Name:
-                        <WInput name="name" onBlur={updateInput}/>    
+                        <WInput className="modal-input" style={{backgroundColor:"white", color:"black"}} name="name" placeholderText = {props.user.name} onBlur={updateInput}/>    
                     </WRow>
                     <WRow>
                         Email:
-                        <WInput name="email" onBlur={updateInput}/>
+                        <WInput className="modal-input" style={{backgroundColor:"white", color:"black"}} name="email" placeholderText = {props.user.email} onBlur={updateInput}/>
                     </WRow>
                     <WRow>
                         Password:
-                        <WInput name="password" onBlur={updateInput}/>
+                        <WInput className="modal-input" style={{backgroundColor:"white", color:"black"}} name="password" placeholderText = "***********" onBlur={updateInput}/>
                     </WRow>
                 </WMMain>
 

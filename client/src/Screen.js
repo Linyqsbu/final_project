@@ -13,6 +13,7 @@ import MapSelectionScreen from './components/map_selection_screen/MapSelectionSc
 import LogInScreen from './components/account_screen/LogInScreen';
 import UpdateAccountScreen from './components/account_screen/UpdateAccountScreen';
 import RegionSpreadsheet from './components/region_spreadsheet/RegionSpreadsheet';
+import RegionViewer from './components/region_viewer/RegionViewer';
 import * as mutations from './cache/mutations';
 import {useHistory} from 'react-router-dom';
 
@@ -105,7 +106,7 @@ const Screen = (props) => {
 
       
         <Switch>
-          <Redirect exact from="/" to={{pathname:`${props.user? "/map_selection":"/welcome"}`}}/>
+          <Redirect exact from="/" to={{pathname:`${props.user === null? "/map_selection":"/welcome"}`}}/>
           <Route path="/welcome" name="welcome">
             <Welcome/>
           </Route>
@@ -144,6 +145,12 @@ const Screen = (props) => {
               maps={maps}
               addRegion = {addRegion}
               subregions={subregions}
+            />
+          </Route>
+
+          <Route path = "/region_viewer/:id">
+            <RegionViewer
+              maps={maps}
             />
           </Route>
 

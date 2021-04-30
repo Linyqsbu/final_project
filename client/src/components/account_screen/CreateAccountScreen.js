@@ -44,28 +44,35 @@ const CreateAccountScreen = (props) =>{
 
     return(
         <div>
-            <WModal visible={true}>
-                <WMHeader onClose={()=>{history.push('/welcome');}}>
+            <WModal className = "modal" visible={true}>
+                <WMHeader className = "modal-header" onClose={()=>{history.push('/welcome');}}>
                     Create a New Account
                 </WMHeader>
-                <WMMain>
+                <WMMain className="modal-main">
                     <WRow>
-                        Name:
-                        <WInput onBlur={updateInput} name="name"/>
+                        Name: 
+                        <WInput className="modal-input" style={{backgroundColor:"white", color:"black"}} onBlur={updateInput} name="name"/>
                     </WRow>
                     <WRow>
-                        Email:
-                        <WInput onBlur={updateInput} name="email"/>
+                        Email: 
+                        <WInput className="modal-input" style={{backgroundColor:"white", color:"black"}} onBlur={updateInput} name="email"/>
                     </WRow>
                     <WRow>
-                        Password:
-                        <WInput onBlur={updateInput} name="password"/>
+                        Password: 
+                        <WInput className="modal-input" style={{backgroundColor:"white", color:"black"}} onBlur={updateInput} name="password"/>
                     </WRow>
                 </WMMain>
-                <WMFooter>
-                    <WButton onClick={handleCreateAccount}>
-                        Submit
-                    </WButton>
+                <WMFooter className="modal-footer">
+                    <div className="modal-footer-container">
+
+                        <WButton className = "submit-button" onClick={handleCreateAccount}>
+                            Create Account
+                        </WButton>                      
+                        
+                        <WButton className="cancel-button" onClick={()=>{history.push('/welcome');}}>
+                            Cancel
+                        </WButton>
+                    </div>
                 </WMFooter>
             </WModal>
         </div>

@@ -15,3 +15,50 @@ html {
     top:25%;
 }
 
+.welcome-container{
+    position:absolute;
+    left:35%;
+    top:40%;
+    color:white;
+    font-size:40px;
+    font-weight:bold;
+    width:400px;
+    text-align:center;
+}
+
+.logo, .logo-button{
+    width:100px;
+}
+
+
+
+.modal-header{
+    padding-bottom:0px;
+    padding-top:0px;
+    height:48px;
+}
+
+.submit-button{
+    position:absolute;
+    left:10%;
+}
+
+.cancel-button{
+    position:absolute;
+    right:10%;
+}
+
+.modal-footer{
+    padding:0px;
+}
+
+.modal-footer-container{
+    height:86.4px;
+    padding:20px;
+}
+
+.modal-input{
+    width:300px;
+}
+
+

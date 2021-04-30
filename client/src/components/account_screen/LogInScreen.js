@@ -35,27 +35,33 @@ const LogInScreen = (props) => {
     }
 
     return (
-        <WModal visible={true}>
-            <WMHeader onClose={()=>{history.push("/welcome")}}>
+        <WModal className="modal" visible={true}>
+            <WMHeader className = "modal-header" onClose={()=>{history.push("/welcome")}}>
                 Login
             </WMHeader>
 
-            <WMMain>
+            <WMMain className="modal-main">
                 <WRow>
                     Email:
-                    <WInput name="email" onBlur={updateInput}/>                    
+                    <WInput className = "modal-input" style={{backgroundColor:"white", color:"black"}} name="email" onBlur={updateInput}/>                    
                 </WRow>
 
                 <WRow>
                     Password:
-                    <WInput name="password" onBlur={updateInput} inputType='password'/>
+                    <WInput className = "modal-input" style={{backgroundColor:"white", color:"black"}} name="password" onBlur={updateInput} inputType='password'/>
                 </WRow>
             </WMMain>
 
-            <WMFooter>
-                <WButton onClick={handleLogin}>
-                    Submit
-                </WButton>
+            <WMFooter className="modal-footer">
+                <div className="modal-footer-container">
+                    <WButton className="submit-button" onClick={handleLogin}>
+                        Submit
+                    </WButton>
+
+                    <WButton className="cancel-button" onClick={()=>{history.push('/welcome');}}>
+                            Cancel
+                    </WButton>
+                </div>
             </WMFooter>
         </WModal>
     );

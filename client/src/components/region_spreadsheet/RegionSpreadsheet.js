@@ -5,8 +5,9 @@ import TableContent from './TableContent';
 import {GET_REGION_BY_ID, GET_MAP_BY_ID} from '../../cache/queries';
 import {useQuery} from '@apollo/client';
 import {useState, setState, useEffect} from 'react';
+import {useHistory} from 'react-router-dom';
 const RegionSpreadsheet = (props) => {
-
+    const history = useHistory();
     const{id} = useParams();
     let map = props.maps.find(map => map._id===id);
     const isMap = map!==undefined;
@@ -62,6 +63,8 @@ const RegionSpreadsheet = (props) => {
             refetchRegion(refetchR);
     }
 
+    const clickDisabled = () =>{}
+
     return(
         <div>
             <div>
@@ -80,7 +83,7 @@ const RegionSpreadsheet = (props) => {
                         redo
                     </i>
                 </WButton>
-                <div>
+                <div onClick = {isMap? clickDisabled: () => {history.push(`/region_viewer/${id}`)}}>
                     Region Name: {region.name}
                 </div>
             </div>
