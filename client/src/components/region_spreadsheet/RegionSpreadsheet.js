@@ -7,23 +7,14 @@ import {useQuery} from '@apollo/client';
 import {useState, setState, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 const RegionSpreadsheet = (props) => {
+
     const history = useHistory();
-    const{id} = useParams();
+    const{id} = useParams()
+
+    
     let map = props.maps.find(map => map._id===id);
     const isMap = map!==undefined;
-    console.log("id", id);
-    console.log("isMap", isMap);
-    /*
-        let region = props.maps.find(map => map._id==id);
-        const[isMap, setIsMap] = useState(region!==null);
-        
-        const {loading, error, data, refetch} = useQuery(GET_REGION_BY_ID, {variables:{_id:id}});
-        if(loading) return null;
-        if(error) console.log("error");
-        if(data && !region) {
-            region = data.getRegionById;
-        }
-    */
+
 
     let region = {};
     let subregions = [];
@@ -31,10 +22,19 @@ const RegionSpreadsheet = (props) => {
     
     const{loading:loadingM, data:dataM, refetch:refetchM} = useQuery(GET_MAP_BY_ID, {variables:{_id:id}});
     const{loading:loadingR, data:dataR, refetch:refetchR} = useQuery(GET_REGION_BY_ID, {variables:{_id:id}});
+
     
-    if(dataM || dataR){
-        region = isMap? dataM.getMapById : dataR.getRegionById;
+
+    if(dataM){
+        console.log("this is a map");
+        region = dataM.getMapById;
         subregions = region.subregions;
+    }
+    
+    else if(dataR){
+        console.log("this is not a map");
+        region = dataR.getRegionById;
+        subregions=region.subregions;
     }
 
       

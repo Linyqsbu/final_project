@@ -89,9 +89,17 @@ html {
 
 .header-col{
     padding-left:0px;
+    text-align:center;
 }
 
 .region-entry{
     padding-left:19.2px;
-    border-left:solid;
+    padding-right:19.2px;
+    padding-top:10px;
+    padding-bottom:10px;
+    text-align:center;
+}
+
+.region-entry div{
+    background-color:white;
 }

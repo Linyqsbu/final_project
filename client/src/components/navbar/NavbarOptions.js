@@ -28,12 +28,18 @@ export const LoggedIn = (props) => {
     const[Logout] = useMutation(LOGOUT);
 
     const handleLogout = async () => {
+        history.push('/welcome');
+        
         await Logout();
+        
         const {data} = await props.fetchUser();
+        
+        console.log("logout", data);
         if(data){
-            let reset = await client.resetStore();
-            if(reset) history.push('/welcome');
+            let reset = await client.clearStore();
+            //if(reset) history.push('/welcome');
         }
+        
     };
     
     return(

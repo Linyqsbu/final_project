@@ -9,8 +9,15 @@ import globe from './globe.jpg';
 const MapSelectionScreen = (props) => {
     const history = useHistory();
 
+    let maps=[];
+    const {loading, data} = useQuery(queries.GET_DB_MAPS);
+    if(loading) return null;
+    if(data){
+        maps=data.getAllMaps;
+    }
+
     const handleSetActiveMap = async (mapId) => {
-        const map = props.maps.find(map => map._id==mapId);
+        const map = maps.find(map => map._id==mapId);
         props.setActiveMap(map);
         history.push(`/region_spreadsheet/${map._id}`)
     }
@@ -25,7 +32,7 @@ const MapSelectionScreen = (props) => {
 
                     <WLSide  side="left" style={{ backgroundColor:"pink"}}>
                         {
-                            props.maps.map(map => (
+                            maps.map(map => (
                                 <MapEntry 
                                     handleSetActiveMap = {props.handleSetActiveMap}
                                     editMapName={props.editMapName}

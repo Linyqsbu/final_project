@@ -17,7 +17,6 @@ module.exports = {
 			@returns {object} a todolist on success and an empty object on failure
 		**/
 		getMapById: async (_, args) => {
-			console.log("getmapbyid");
 			const { _id } = args;
 			const objectId = new ObjectId(_id);
 			const map = await Map.findOne({_id: objectId});
@@ -26,13 +25,11 @@ module.exports = {
 		},
 
 		getRegionById: async(_, args) => {
-			const{_id} = args;
-			const objectId = new Object(_id);
+			const{ _id } = args;
+			const objectId = new ObjectId(_id);
 			const region = await Region.findOne({_id: objectId});
-			if(region){
-				return region;
-			}
-			
+			if(region) return region;
+			else
 			return ({});
 			
 		}
@@ -59,8 +56,19 @@ module.exports = {
 		deleteMap: async(_, args) => {
 			const {_id} = args;
 			const objectId = new ObjectId(_id);
+			let found = await Map.findOne({_id: objectId});
+			let subregionQueue = found.subregions;// a queue to delete the subregions
+			let currentSubregion;
+			let regionDeleted;
 			const deleted = await Map.deleteOne({_id: objectId});
 			
+			while(subregionQueue.length>0){
+				currentSubregion=subregionQueue.shift();
+				found = await Region.findOne({_id:currentSubregion._id});
+				regionDeleted = await Region.deleteOne({_id: currentSubregion._id});
+				subregionQueue=[...subregionQueue, ...found.subregions];
+			}
+
 			if(deleted) return true;
 			else return false;
 		},

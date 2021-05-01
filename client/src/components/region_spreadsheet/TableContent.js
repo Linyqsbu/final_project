@@ -4,7 +4,7 @@ import {WRow} from 'wt-frontend';
 const TableContent = (props) => {
     
     return(
-        <div>
+        <div style={{height:"90%", overflowY:"auto", backgroundColor:"gray"}}>
             {
                 props.subregions.map(subregion => (
                     <RegionEntry

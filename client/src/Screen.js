@@ -142,6 +142,7 @@ const Screen = (props) => {
 
           <Route path="/region_spreadsheet/:id">
             <RegionSpreadsheet
+              user={props.user}
               maps={maps}
               addRegion = {addRegion}
               subregions={subregions}

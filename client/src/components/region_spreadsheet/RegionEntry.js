@@ -10,20 +10,23 @@ const RegionEntry = (props) => {
 
     return(
         <WRow>
+            <WCol style={{paddingTop:"10px", paddingBottom:"10px", paddingLeft:"40px", borderBottom:"solid",borderColor:"black"}}> 
+                <i className="material-icons region" style={{color:"brown"}}>close</i>
+            </WCol>
             <WCol className="region-entry" onClick = {handleNavigate} size="2">
-                {props.subregion.name}
+                <div>{props.subregion.name}</div>
             </WCol>
             <WCol className="region-entry" size="2">
-                {props.subregion.capital}
+                <div>{props.subregion.capital}</div>
             </WCol>
             <WCol className="region-entry" size="2">
-                {props.subregion.leader}
+                <div>{props.subregion.leader}</div>
             </WCol>
             <WCol className="region-entry" size="2">
-                {props.subregion.flag}
+                <div>{props.subregion.flag}</div>
             </WCol>
-            <WCol className="region-entry" size="4">
-                {props.subregion.landmarks}
+            <WCol className="region-entry" size="3">
+                <div>{props.subregion.landmarks}</div>
             </WCol>
         </WRow>
     );
