@@ -1,7 +1,7 @@
 import {useParams} from 'react-router-dom';
 import {GET_REGION_BY_ID} from '../../cache/queries';
 import {useQuery} from '@apollo/client'
-import {WRow, WButton} from 'wt-frontend';
+import {WRow, WButton, WInput} from 'wt-frontend';
 const RegionViewer = (props) => {
     const {id} = useParams();
     let map = props.maps.find(map => map._id === id)
@@ -17,6 +17,7 @@ const RegionViewer = (props) => {
 
     return(
         <div className="region-viewer">
+            
             <WButton style={{color:"white"}} wType="texted">
                 <i className="material-icons region-spreadsheet-button">undo</i>
             </WButton>
@@ -40,8 +41,19 @@ const RegionViewer = (props) => {
             <WRow style={{paddingLeft:"15px", paddingBottom:"20px"}}>
                 <span># of subregions:</span> {region.subregions.length}
             </WRow>
-            <div className="landmark-container">
+            
+            <div className="region-landmark">
                 Region Landmarks
+                <div className="landmark-container">
+                </div>
+                <div className="add-region-bar"> 
+                    <WButton wType="texted">
+                        <i style={{fontSize:"30px", fontWeight:"bold", color:"green"}} className="material-icons">
+                            add
+                        </i>
+                    </WButton>
+                    <WInput style={{height:"100%", backgroundColor:"white", color:"black", width:"300px"}}/>
+                </div>
             </div>
             
         </div>

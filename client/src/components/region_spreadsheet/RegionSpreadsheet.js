@@ -92,6 +92,9 @@ const RegionSpreadsheet = (props) => {
             </div>
             <RegionHeader/>
             <TableContent
+                parentRegions={props.parentRegions}
+                setParentRegions={props.setParentRegions}
+                region={region}
                 subregions = {subregions}
             />
         </div>

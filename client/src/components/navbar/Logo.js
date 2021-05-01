@@ -7,7 +7,7 @@ const Logo = (props) => {
     return (
         <div>
             {!props.user? <div className="logo"> The World Data Mapper </div>:
-                <div className = "logo-button" onClick = {() => {history.push('/map_selection');}}>
+                <div className = "logo-button" onClick = {() => {history.push('/map_selection'); props.setParentRegions([])}}>
                     The World Data Mapper
                 </div>
             }

@@ -7,6 +7,7 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { WNavbar, WLayout, WNavItem, WModal, WMHeader, WMFooter, WButton } 	from 'wt-frontend';
 import NavbarOptions from './components/navbar/NavbarOptions';
 import Logo from './components/navbar/Logo'
+import ParentRegionEntry from './components/navbar/ParentRegionEntry'
 import Welcome from './components/welcome/Welcome';
 import CreateAccountScreen from './components/account_screen/CreateAccountScreen';
 import MapSelectionScreen from './components/map_selection_screen/MapSelectionScreen';
@@ -27,6 +28,7 @@ const Screen = (props) => {
 
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
+  const[parentRegions, setParentRegions] = useState([]);
 
   console.log("user", props.user);
   
@@ -95,10 +97,18 @@ const Screen = (props) => {
         <WNavbar style={{backgroundColor:'black'}}>
           <ul>
             <WNavItem>
-              <Logo user={props.user}/>
+              <Logo setParentRegions={setParentRegions} user={props.user}/>
             </WNavItem>
           </ul>
-
+          <ul>
+            <WNavItem>
+              {
+                parentRegions.map(parentRegion => (<ParentRegionEntry
+                  parentRegion={parentRegion}
+                />))
+              }
+            </WNavItem>
+          </ul>
           <ul>
               <NavbarOptions fetchUser={props.refetchUser} user={props.user} auth = {props.user===null? false: true}/>
           </ul>
@@ -146,6 +156,8 @@ const Screen = (props) => {
               maps={maps}
               addRegion = {addRegion}
               subregions={subregions}
+              setParentRegions={setParentRegions}
+              parentRegions={parentRegions}
             />
           </Route>
 
