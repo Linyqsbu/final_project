@@ -32,6 +32,23 @@ module.exports = {
 			else
 			return ({});
 			
+		},
+
+		getPath: async(_, args) => {
+			const {_id} = args;
+			const objectId = new ObjectId(_id);
+			let region = await Region.findOne({_id:objectId});
+			const path = [];
+			
+			while(region.parentRegionId){
+				region = await Region.findOne({_id:region.parentRegionId});
+				if(!region){
+					region = await Map.findOne({_id:region.parentRegionId});
+				}
+				path.unshift({_id:region._id, name:region.name});
+			}
+
+			return path;
 		}
     },
 
@@ -83,8 +100,6 @@ module.exports = {
 		},
 
 		addRegion: async(_, args) => {
-			console.log("addregion");
-			console.log("args", args);
 			const{region, _id, isMap} = args;
 			const parentId = new ObjectId(_id);
 			const regionId = new ObjectId();
@@ -123,5 +138,6 @@ module.exports = {
 			if(updated) return regionId;
 			else return ("Subregion not added");
 		}
+
 	}
 }

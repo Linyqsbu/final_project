@@ -24,35 +24,10 @@ export const GET_DB_MAPS = gql`
 				parentRegionId
 				flag
 				landmarks
-				subregions{
-					...SubregionFields
-					...RegionRecursive
-				}
 			}
 		}
 	}
 
-	fragment SubregionFields on Region{
-		_id
-		name
-		capital
-		leader
-		parentRegionId
-		flag
-		landmarks
-	}
-
-	fragment RegionRecursive on Region{
-		subregions{
-			...SubregionFields
-			subregions{
-				...SubregionFields
-				subregions{
-					...SubregionFields
-				}
-			}
-		}
-	}
 `;
 
 export const GET_REGION_BY_ID = gql`

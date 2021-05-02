@@ -20,10 +20,16 @@ const typeDefs = gql`
         subregions:[Region]
     }
 
+    type parentEntry{
+        _id:String
+        name:String
+    }
+
     extend type Query{
         getAllMaps:[Map]
         getMapById(_id: String!): Map
         getRegionById(_id: String!): Region
+        getPath(_id: String!):[parentEntry]
     }
 
     extend type Mutation{
@@ -38,6 +44,8 @@ const typeDefs = gql`
         deleteLandmark(landmark: String!): String
         changeParentRegion(newParentId: String!, oldParentId:String!, regionId:String!): String
     }
+
+    
 
     input MapInput {
         _id: String!

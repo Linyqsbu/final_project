@@ -2,10 +2,11 @@ import {useParams} from 'react-router-dom';
 import {GET_REGION_BY_ID} from '../../cache/queries';
 import {useQuery} from '@apollo/client'
 import {WRow, WButton, WInput} from 'wt-frontend';
+import {useHistory} from 'react-router-dom';
 const RegionViewer = (props) => {
     const {id} = useParams();
+    const history = useHistory();
     let map = props.maps.find(map => map._id === id)
-
     
     let region = {};
 
@@ -13,6 +14,13 @@ const RegionViewer = (props) => {
     if(loading) return null;
     if(data){
         region = data.getRegionById;
+    }
+
+    const handleNavigate = () => {
+        const parent = props.parentRegions[props.parentRegions.length-1];
+        const newParentRegions = props.parentRegions.slice(0,props.parentRegions.length-1);
+        props.setParentRegions(newParentRegions);
+        history.push(`/region_spreadsheet/${parent._id}`);
     }
 
     return(
@@ -30,7 +38,7 @@ const RegionViewer = (props) => {
                 <span>Region Name:</span> {region.name}
             </WRow>
             <WRow style={{paddingLeft:"15px", paddingBottom:"20px"}}>
-                <span>Parent Region:</span> <span style={{color:"skyblue"}}>{region.parentRegionId}</span>
+                <span>Parent Region:</span> <span onClick={handleNavigate} style={{color:"skyblue", cursor:"pointer"}}>{props.parentRegions[props.parentRegions.length-1].name}</span>
             </WRow>
             <WRow style={{paddingLeft:"15px", paddingBottom:"20px"}}>
                 <span>Regional Capital:</span> {region.capital}

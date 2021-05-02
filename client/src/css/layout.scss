@@ -124,3 +124,12 @@ html {
     display:flex;
     float:left;
 }
+
+.path-container{
+    display:flex;
+    flex-direction:row;
+}
+
+.arrow{
+    padding-left:30px;
+}

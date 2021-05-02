@@ -11,7 +11,6 @@ const RegionSpreadsheet = (props) => {
     const history = useHistory();
     const{id} = useParams()
 
-    
     let map = props.maps.find(map => map._id===id);
     const isMap = map!==undefined;
 
@@ -19,12 +18,12 @@ const RegionSpreadsheet = (props) => {
     let region = {};
     let subregions = [];
 
-    
+    console.log(id);
     const{loading:loadingM, data:dataM, refetch:refetchM} = useQuery(GET_MAP_BY_ID, {variables:{_id:id}});
     const{loading:loadingR, data:dataR, refetch:refetchR} = useQuery(GET_REGION_BY_ID, {variables:{_id:id}});
 
+    if(loadingM || loadingR) {console.log("loading");}
     
-
     if(dataM){
         console.log("this is a map");
         region = dataM.getMapById;
@@ -32,11 +31,22 @@ const RegionSpreadsheet = (props) => {
     }
     
     else if(dataR){
-        console.log("this is not a map");
         region = dataR.getRegionById;
         subregions=region.subregions;
     }
 
+    console.log("dataM", dataM);
+    console.log("dataR", dataR);
+    /*
+    useEffect(() =>{
+        let isMounted = true; // note this flag denote mount status
+        refetchRegion(refetch).then(data => {
+            if (isMounted) setState(data);
+        })
+        return () => { isMounted = false };
+    });
+    */
+    
       
     const refetchRegion = async (refetch) =>{
         const {loading, data} = await refetch({variables:{_id:id}});

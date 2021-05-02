@@ -7,7 +7,7 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { WNavbar, WLayout, WNavItem, WModal, WMHeader, WMFooter, WButton } 	from 'wt-frontend';
 import NavbarOptions from './components/navbar/NavbarOptions';
 import Logo from './components/navbar/Logo'
-import ParentRegionEntry from './components/navbar/ParentRegionEntry'
+import PathContainer from './components/navbar/PathContainer'
 import Welcome from './components/welcome/Welcome';
 import CreateAccountScreen from './components/account_screen/CreateAccountScreen';
 import MapSelectionScreen from './components/map_selection_screen/MapSelectionScreen';
@@ -36,7 +36,7 @@ const Screen = (props) => {
   const {loading:loadingM, error: errorM, data: dataM, refetch: fetchMaps} = useQuery(queries.GET_DB_MAPS);
   if(loadingM){return null;}
   if(errorM){console.log(errorM, 'error');}
-  if(dataM) {maps = dataM.getAllMaps;}
+  if(dataM) {console.log("maps", dataM.getAllMaps); maps = dataM.getAllMaps;}
   
   let subregions = [];
 
@@ -82,7 +82,7 @@ const Screen = (props) => {
       leader:"Leader",
       flag:"Flag",
       parentRegionId: id,
-      landmarks:"[]"
+      landmarks:[]
     }
 
     await AddRegion({variables:{region:newRegion, _id:id, isMap: isMap}});
@@ -101,12 +101,11 @@ const Screen = (props) => {
             </WNavItem>
           </ul>
           <ul>
-            <WNavItem>
-              {
-                parentRegions.map(parentRegion => (<ParentRegionEntry
-                  parentRegion={parentRegion}
-                />))
-              }
+            <WNavItem className="parent-entry" style={{position:"absolute", left:"10%"}}>
+              <PathContainer
+                parentRegions={parentRegions}
+                setParentRegions={setParentRegions}
+              />
             </WNavItem>
           </ul>
           <ul>
@@ -164,6 +163,8 @@ const Screen = (props) => {
           <Route path = "/region_viewer/:id">
             <RegionViewer
               maps={maps}
+              parentRegions={parentRegions}
+              setParentRegions={setParentRegions}
             />
           </Route>
 

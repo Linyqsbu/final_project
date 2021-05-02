@@ -2,11 +2,11 @@ import {WRow, WCol} from 'wt-frontend';
 import {useHistory} from 'react-router-dom';
 const RegionEntry = (props) => {
     const history = useHistory();
-    
+
     const handleNavigate = () => {
         const newParentRegion=[...props.parentRegions, {_id:props.region._id, name:props.region.name}];
         props.setParentRegions(newParentRegion);
-        history.push(`/region_spreadsheet/${props.subregion._id}`)
+        history.push(`/region_spreadsheet/${props.subregion._id}`);
         
     }
 
