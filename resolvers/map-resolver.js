@@ -35,20 +35,25 @@ module.exports = {
 		},
 
 		getPath: async(_, args) => {
+			
 			const {_id} = args;
+			console.log("id", _id);
+			
 			const objectId = new ObjectId(_id);
 			let region = await Region.findOne({_id:objectId});
 			const path = [];
-			
+			let parentId;
 			while(region.parentRegionId){
-				region = await Region.findOne({_id:region.parentRegionId});
+				parentId = new ObjectId(region.parentRegionId);
+				region = await Region.findOne({_id:parentId});
 				if(!region){
-					region = await Map.findOne({_id:region.parentRegionId});
+					region = await Map.findOne({_id:parentId});
 				}
 				path.unshift({_id:region._id, name:region.name});
 			}
-
+			
 			return path;
+			
 		}
     },
 

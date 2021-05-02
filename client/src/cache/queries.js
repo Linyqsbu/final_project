@@ -72,3 +72,12 @@ export const GET_MAP_BY_ID = gql`
 		}
 	}
 `;
+
+export const GET_PATH = gql`
+	query GetPath($_id: String!){
+		getPath(_id: $_id){
+			_id
+			name
+		}
+	}
+`;

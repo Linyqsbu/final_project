@@ -2,14 +2,14 @@ import {useParams} from 'react-router-dom';
 import {WButton, WCol} from 'wt-frontend';
 import RegionHeader from './RegionHeader';
 import TableContent from './TableContent';
-import {GET_REGION_BY_ID, GET_MAP_BY_ID} from '../../cache/queries';
+import {GET_REGION_BY_ID, GET_MAP_BY_ID, GET_PATH} from '../../cache/queries';
 import {useQuery} from '@apollo/client';
 import {useState, setState, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 const RegionSpreadsheet = (props) => {
 
     const history = useHistory();
-    const{id} = useParams()
+    const{id} = useParams();
 
     let map = props.maps.find(map => map._id===id);
     const isMap = map!==undefined;
@@ -18,9 +18,13 @@ const RegionSpreadsheet = (props) => {
     let region = {};
     let subregions = [];
 
-    console.log(id);
     const{loading:loadingM, data:dataM, refetch:refetchM} = useQuery(GET_MAP_BY_ID, {variables:{_id:id}});
     const{loading:loadingR, data:dataR, refetch:refetchR} = useQuery(GET_REGION_BY_ID, {variables:{_id:id}});
+    const{data:dataP} = useQuery(GET_PATH, {variables:{_id:id}});
+
+    if(dataP){
+        props.setParentRegions(dataP.getPath);
+    }
 
     if(loadingM || loadingR) {console.log("loading");}
     
@@ -35,17 +39,8 @@ const RegionSpreadsheet = (props) => {
         subregions=region.subregions;
     }
 
-    console.log("dataM", dataM);
-    console.log("dataR", dataR);
-    /*
-    useEffect(() =>{
-        let isMounted = true; // note this flag denote mount status
-        refetchRegion(refetch).then(data => {
-            if (isMounted) setState(data);
-        })
-        return () => { isMounted = false };
-    });
-    */
+    
+
     
       
     const refetchRegion = async (refetch) =>{
@@ -106,6 +101,7 @@ const RegionSpreadsheet = (props) => {
                 setParentRegions={props.setParentRegions}
                 region={region}
                 subregions = {subregions}
+                
             />
         </div>
     );

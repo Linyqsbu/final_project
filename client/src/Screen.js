@@ -17,9 +17,10 @@ import RegionSpreadsheet from './components/region_spreadsheet/RegionSpreadsheet
 import RegionViewer from './components/region_viewer/RegionViewer';
 import * as mutations from './cache/mutations';
 import {useHistory} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 
 const Screen = (props) => {
-  
+
   const[AddNewMap] = useMutation(mutations.ADDMAP);
   const[DeleteMap] = useMutation(mutations.DELETEMAP);
   const[EditMapName] = useMutation(mutations.EDITMAPNAME);
@@ -36,9 +37,14 @@ const Screen = (props) => {
   const {loading:loadingM, error: errorM, data: dataM, refetch: fetchMaps} = useQuery(queries.GET_DB_MAPS);
   if(loadingM){return null;}
   if(errorM){console.log(errorM, 'error');}
-  if(dataM) {console.log("maps", dataM.getAllMaps); maps = dataM.getAllMaps;}
+  if(dataM) {maps = dataM.getAllMaps;}
   
   let subregions = [];
+  let path = [];
+
+  const setPath = (path) => {
+    setParentRegions(path);
+  }
 
 
   const refetchMaps = async (refetch) => {
@@ -103,6 +109,7 @@ const Screen = (props) => {
           <ul>
             <WNavItem className="parent-entry" style={{position:"absolute", left:"10%"}}>
               <PathContainer
+                path={path}
                 parentRegions={parentRegions}
                 setParentRegions={setParentRegions}
               />
@@ -129,7 +136,6 @@ const Screen = (props) => {
               fetchUser={props.refetchUser}
               fetchMaps={fetchMaps}
               refetchMaps={refetchMaps}
-
             />
           </Route>
 
