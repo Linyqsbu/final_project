@@ -113,7 +113,7 @@ const Screen = (props) => {
             </WNavItem>
           </ul>
           <ul>
-              <NavbarOptions fetchUser={props.refetchUser} user={props.user} auth = {props.user===null? false: true}/>
+              <NavbarOptions setParentRegions={setParentRegions} fetchUser={props.refetchUser} user={props.user} auth = {props.user===null? false: true}/>
           </ul>
         </WNavbar>
 
@@ -125,7 +125,7 @@ const Screen = (props) => {
           </Route>
 
           <Route path="/create_account" name="create_account">
-            <CreateAccountScreen user={props.user} fetchUser={props.refetchUser}/>
+            <CreateAccountScreen  user={props.user} fetchUser={props.refetchUser}/>
           </Route>
 
           <Route path="/log_in" name="log_in">
@@ -149,7 +149,7 @@ const Screen = (props) => {
           </Route>
 
           <Route path="/update_account" name="update_account">
-            <UpdateAccountScreen fetchUser={props.refetchUser} user={props.user}/>
+            <UpdateAccountScreen setParentRegions={setParentRegions} fetchUser={props.refetchUser} user={props.user}/>
           </Route>
 
           <Route path="/region_spreadsheet/:id">

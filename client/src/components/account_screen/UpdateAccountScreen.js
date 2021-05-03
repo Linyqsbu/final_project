@@ -41,7 +41,7 @@ const UpdateAccountScreen = (props) => {
         if(data){
             let reset = await client.clearStore();
         }
-        
+        props.setParentRegions([]);
         history.push('/welcome');
         
     }

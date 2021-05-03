@@ -29,7 +29,7 @@ export const LoggedIn = (props) => {
 
     const handleLogout = async () => {
         history.push('/welcome');
-        
+        props.setParentRegions([]);
         await Logout();
         
         const {data} = await props.fetchUser();
@@ -61,7 +61,7 @@ const NavbarOptions = (props) =>{
     return(
         <div>
             {
-                props.auth === false ? <LoggedOut/>:<LoggedIn user={props.user} fetchUser={props.fetchUser}/>
+                props.auth === false ? <LoggedOut/>:<LoggedIn setParentRegions={props.setParentRegions} user={props.user} fetchUser={props.fetchUser}/>
             }
         </div>
     );

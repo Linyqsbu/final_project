@@ -1,4 +1,6 @@
 import globe from './Globe.PNG';
+
+
 const Welcome = (props) =>{
     return(
         <div className="welcome-container">
