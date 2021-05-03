@@ -90,7 +90,7 @@ const RegionSpreadsheet = (props) => {
                 </WButton>
                 <span style={{fontSize:"30px", fontWeight:"bold", paddingLeft:"250px"}}>
                 Region Name:
-                    <span style={{color:"deepskyblue"}} onClick = {isMap? clickDisabled: () => {history.push(`/region_viewer/${id}`)}}>
+                    <span style={{cursor:"pointer", color:"deepskyblue"}} onClick = {isMap? clickDisabled: () => {history.push(`/region_viewer/${id}`)}}>
                         {region.name}
                     </span>
                 </span>

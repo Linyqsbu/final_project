@@ -77,9 +77,6 @@ module.exports = {
 			const userId = new ObjectId(_id);
 
 			const alreadyExist = await User.findOne({email:email});
-		
-			console.log("userId" ,userId);
-			console.log("alraedExistId", alreadyExist._id);
 			if(alreadyExist){
 				if(_id != alreadyExist._id){
 					return ("Email already exist");
