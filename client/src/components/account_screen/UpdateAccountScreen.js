@@ -20,7 +20,7 @@ const UpdateAccountScreen = (props) => {
         setInput(updated);
     }
 
-    const handleUpdateAccount = async (e) => {
+    const handleUpdateAccount = async () => {
         console.log({_id:props.user._id,...input});
         console.log(props.user);
         for(let field in input){
@@ -30,17 +30,24 @@ const UpdateAccountScreen = (props) => {
             }
         }
 
-        await Update({variables:{_id:props.user._id,...input}});
+        const {data:message} = await Update({variables:{_id:props.user._id,...input}});
+        if(message){
+            if(message.update === 'Email already exist'){
+                alert('User with that email already exist');
+            }
+        }
         await Logout();
         const {data} = await props.fetchUser();
         if(data){
-            let reset = await client.resetStore();
-            if(reset) history.push('/welcome');
+            let reset = await client.clearStore();
         }
+        
+        history.push('/welcome');
         
     }
 
     return(
+        props.user?(
         <div>
             <WModal className = "modal" visible={true}>
                 <WMHeader className="modal-header" onClose={()=> history.push('/map_selection')}> 
@@ -58,17 +65,20 @@ const UpdateAccountScreen = (props) => {
                     </WRow>
                     <WRow>
                         Password:
-                        <WInput className="modal-input" style={{backgroundColor:"white", color:"black"}} name="password" placeholderText = "***********" onBlur={updateInput}/>
+                        <WInput className="modal-input" style={{backgroundColor:"white", color:"black"}} name="password" inputType="password" placeholderText = "***********" onBlur={updateInput}/>
                     </WRow>
                 </WMMain>
 
                 <WMFooter>
-                    <WButton onClick={handleUpdateAccount}>
+                    <WButton style={{float:"left"}} onClick={handleUpdateAccount}>
                         Submit
+                    </WButton>
+                    <WButton style={{float:"right"}} onClick={() => {history.push('/map_selection')}}>
+                        Cancel
                     </WButton>
                 </WMFooter>
             </WModal>
-        </div>
+        </div>):null
     );
 };
 

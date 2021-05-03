@@ -35,11 +35,11 @@ const CreateAccountScreen = (props) =>{
 				alert('User with that email already registered');
 			}
 			else {
-				props.fetchUser();
+				const{data} = await props.fetchUser();
 			}
         }
-
         history.push('/map_selection');
+     
     }
 
     return(
@@ -59,7 +59,7 @@ const CreateAccountScreen = (props) =>{
                     </WRow>
                     <WRow>
                         Password: 
-                        <WInput className="modal-input" style={{backgroundColor:"white", color:"black"}} onBlur={updateInput} name="password"/>
+                        <WInput className="modal-input" style={{backgroundColor:"white", color:"black"}} onBlur={updateInput} inputType = "password" name="password"/>
                     </WRow>
                 </WMMain>
                 <WMFooter className="modal-footer">

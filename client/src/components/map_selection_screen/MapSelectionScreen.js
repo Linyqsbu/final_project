@@ -1,4 +1,4 @@
-import {WLayout, WLHeader, WLSide, WLMain, WButton, WModal, WMHeader,WMFooter} from 'wt-frontend';
+import {WLayout, WLHeader, WLSide, WLMain, WButton, WModal, WMHeader,WMFooter, WMMain, WInput} from 'wt-frontend';
 import MapEntry from './MapEntry';
 import {useQuery, useMutation} from '@apollo/client';
 import * as queries from '../../cache/queries'
@@ -9,11 +9,20 @@ import globe from './globe.jpg';
 const MapSelectionScreen = (props) => {
     const history = useHistory();
 
+    const[showModal, toggleShowModal] = useState(false);
+    const[mapName, setMapName] = useState('New Map');
+
     let maps=[];
     const {loading, data} = useQuery(queries.GET_DB_MAPS);
     if(loading) return null;
     if(data){
         maps=data.getAllMaps;
+    }
+
+    const updateMapName = (e) => {
+        const {value} = e.target;
+        const updated = value;
+        setMapName(updated);
     }
 
     const handleSetActiveMap = async (mapId) => {
@@ -48,12 +57,32 @@ const MapSelectionScreen = (props) => {
 
                     <WLMain style={{backgroundColor:"white"}}>
                         <img src={globe} style={{width:"100%"}} />
-                        <WButton className="map-selection-button" onClick={props.createNewMap}>
+                        <WButton className="map-selection-button" onClick={() => {toggleShowModal(true)}}>
                             Create New Map
                         </WButton>
                     </WLMain>
+                    {
+                        showModal && (<div>
+                                <WModal style={{fontWeight:"bold", color:"white"}} visible={true}>
+                                    <WMHeader>
+                                        Please Enter the Name of the Map
+                                    </WMHeader>
+                                    <WMMain>
+                                        Name:
+                                        <WInput autoFocus={true} name="name" onBlur={updateMapName} defaultValue="New Map"/>
+                                    </WMMain>
+                                    <WMFooter>
+                                        <WButton onClick={() => {props.createNewMap(mapName);toggleShowModal(false);}}>
+                                            Submit
+                                        </WButton>
+                                        <WButton onClick={()=>{toggleShowModal(false)}} style={{float:"right"}}>
+                                            Cancel
+                                        </WButton>
+                                    </WMFooter>
+                                </WModal>
+                        </div>)
+                    }
 
-                    
                 </WLayout> 
             </div>
         </div>

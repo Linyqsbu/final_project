@@ -75,6 +75,17 @@ module.exports = {
 		update: async (_, args, {res}) => {
 			const{_id, email, password, name } = args;
 			const userId = new ObjectId(_id);
+
+			const alreadyExist = await User.findOne({email:email});
+		
+			console.log("userId" ,userId);
+			console.log("alraedExistId", alreadyExist._id);
+			if(alreadyExist){
+				if(_id != alreadyExist._id){
+					return ("Email already exist");
+				}
+			}
+
 			const hashed = await bcrypt.hash(password, 10);
 			const updated = await User.updateOne({_id:userId}, {email:email, password:hashed, name:name});
 			if(updated) return ("User updated successfully");

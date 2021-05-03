@@ -42,9 +42,6 @@ const Screen = (props) => {
   let subregions = [];
   let path = [];
 
-  const setPath = (path) => {
-    setParentRegions(path);
-  }
 
 
   const refetchMaps = async (refetch) => {
@@ -52,12 +49,12 @@ const Screen = (props) => {
     if(data){maps=data.getAllMaps;}
   }
 
-  const createNewMap = async () => {
+  const createNewMap = async (name) => {
     console.log("create new map");
     
     let newMap = {
       _id:'',
-      name:"New Map",
+      name:name,
       owner: props.user._id,
       subregions:[],
     };
@@ -128,7 +125,7 @@ const Screen = (props) => {
           </Route>
 
           <Route path="/create_account" name="create_account">
-            <CreateAccountScreen fetchUser={props.refetchUser}/>
+            <CreateAccountScreen user={props.user} fetchUser={props.refetchUser}/>
           </Route>
 
           <Route path="/log_in" name="log_in">
@@ -178,14 +175,14 @@ const Screen = (props) => {
         {
           showDelete && (<div>
                           <WModal visible={true}>
-                              <WMHeader>
+                              <WMHeader style={{color:"white", fontWeight:"bold", textAlign:"center", fontSize:"20px"}}>
                               Delete
                               </WMHeader>
                               <WMFooter>
-                              <WButton onClick = {deleteMap}>
+                              <WButton color="danger" onClick = {deleteMap}>
                                   Delete
                               </WButton>
-                              <WButton onClick={() => {toggleShowDelete(false)}}>
+                              <WButton style={{float:"right"}} onClick={() => {toggleShowDelete(false)}}>
                                   Cancel
                               </WButton>
                               </WMFooter>
