@@ -2,7 +2,7 @@ import ParentRegionEntry from './ParentRegionEntry';
 import {useParams} from 'react-router-dom';
 const PathContainer = (props) => {
 
-    return(
+    return(props.parentRegions?
         <div className="path-container">
             {
                 props.parentRegions[0]?
@@ -28,7 +28,7 @@ const PathContainer = (props) => {
                 </span>))
             }
             
-        </div>
+        </div>:null
     );
 };
 

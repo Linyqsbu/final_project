@@ -20,7 +20,7 @@ const RegionSpreadsheet = (props) => {
 
     const{loading:loadingM, data:dataM, refetch:refetchM} = useQuery(GET_MAP_BY_ID, {variables:{_id:id}});
     const{loading:loadingR, data:dataR, refetch:refetchR} = useQuery(GET_REGION_BY_ID, {variables:{_id:id}});
-    const{data:dataP} = useQuery(GET_PATH, {variables:{_id:id}});
+    const{data:dataP, refetch:refetchP} = useQuery(GET_PATH, {variables:{_id:id}});
 
     if(dataP){
         props.setParentRegions(dataP.getPath);
@@ -40,10 +40,9 @@ const RegionSpreadsheet = (props) => {
     }
 
     
-
-    
       
-    const refetchRegion = async (refetch) =>{
+    const refetchRegion = async () =>{
+        /*
         const {loading, data} = await refetch({variables:{_id:id}});
         if(loading) {console.log("loading");}
         if(data){
@@ -53,20 +52,40 @@ const RegionSpreadsheet = (props) => {
             else
                 region = data.getRegionById;
 
-            
             subregions = region.subregions;
         }
+        */
 
+        if(isMap){
+            const {data} = await refetchM({variables:{_id:id}});
+            if(data){
+                region = data.getMapById;
+                subregions = region.subregions;
+            }
+        }
+
+        else{
+            const{data} = await refetchR({variables:{_id:id}});
+            if(data){
+                region = data.getRegionById;
+                subregions = region.subregions;
+            }
+        }
+    }
+
+    const refetchPath = async(_id) => {
+        const {data} = await refetchP({variables:{_id:_id}})
+        if(data){
+            props.setParentRegions(dataP.getPath);
+        }
     }
 
     const handleAddRegion = async () => {
         await props.addRegion(isMap, id);
         console.log("isMap", isMap);
-        if(isMap)
-            refetchRegion(refetchM);
-        else
-            refetchRegion(refetchR);
+        await refetchRegion();
     }
+
 
     const clickDisabled = () =>{}
 
@@ -97,11 +116,11 @@ const RegionSpreadsheet = (props) => {
             </div>
             <RegionHeader/>
             <TableContent
-                parentRegions={props.parentRegions}
-                setParentRegions={props.setParentRegions}
                 region={region}
                 subregions = {subregions}
-                
+                refetchRegion = {refetchRegion} 
+                updateRegionField={props.updateRegionField}
+                refetchPath={refetchPath}
             />
         </div>
     );

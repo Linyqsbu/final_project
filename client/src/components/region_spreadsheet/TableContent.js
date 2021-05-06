@@ -8,11 +8,12 @@ const TableContent = (props) => {
             {
                 props.subregions.map(subregion => (
                     <RegionEntry
-                        parentRegions={props.parentRegions}
-                        setParentRegions={props.setParentRegions}
                         subregion = {subregion}
                         key = {subregion._id}
                         region={props.region}
+                        refetchRegion={props.refetchRegion}
+                        updateRegionField={props.updateRegionField}
+                        refetchPath={props.refetchPath}
                     />)
                 )
             }

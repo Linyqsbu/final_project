@@ -25,13 +25,13 @@ const Screen = (props) => {
   const[DeleteMap] = useMutation(mutations.DELETEMAP);
   const[EditMapName] = useMutation(mutations.EDITMAPNAME);
   const[AddRegion]  = useMutation(mutations.ADDREGION);
+  const[UpdateRegionField] = useMutation(mutations.UPDATE_REGION_FIELD);
 
 
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
   const[parentRegions, setParentRegions] = useState([]);
 
-  console.log("user", props.user);
   
   let maps=[];
   const {loading:loadingM, error: errorM, data: dataM, refetch: fetchMaps} = useQuery(queries.GET_DB_MAPS);
@@ -50,7 +50,6 @@ const Screen = (props) => {
   }
 
   const createNewMap = async (name) => {
-    console.log("create new map");
     
     let newMap = {
       _id:'',
@@ -60,7 +59,6 @@ const Screen = (props) => {
     };
 
     const {data} = await AddNewMap({variables:{map:newMap}})
-    console.log(data);
     refetchMaps(fetchMaps);
   }
 
@@ -72,7 +70,6 @@ const Screen = (props) => {
   const deleteMap = async () =>{
     const {data} = await DeleteMap({variables:{_id: activeMap._id}});
     refetchMaps(fetchMaps);
-    console.log(maps);
     toggleShowDelete(false);
   }
 
@@ -89,6 +86,10 @@ const Screen = (props) => {
     }
 
     await AddRegion({variables:{region:newRegion, _id:id, isMap: isMap}});
+  }
+
+  const updateRegionField = async (_id, parentId, newValue, prevValue, field) => {
+    await UpdateRegionField({variables:{_id:_id, parentId:parentId, value:newValue, field:field}});
   }
 
   
@@ -160,6 +161,7 @@ const Screen = (props) => {
               subregions={subregions}
               setParentRegions={setParentRegions}
               parentRegions={parentRegions}
+              updateRegionField={updateRegionField}
             />
           </Route>
 

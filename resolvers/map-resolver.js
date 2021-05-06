@@ -7,7 +7,7 @@ module.exports = {
     Query:{
         getAllMaps: async (_, __, { req }) => {
 			const _id = new ObjectId(req.userId);
-			if(!_id) {console.log("something"); return([])};
+			if(!_id) {return([])};
 			const maps = await Map.find({owner: _id});
 			return (maps);
 		},
@@ -37,10 +37,10 @@ module.exports = {
 		getPath: async(_, args) => {
 			
 			const {_id} = args;
-			console.log("id", _id);
 			
 			const objectId = new ObjectId(_id);
 			let region = await Region.findOne({_id:objectId});
+			if(!region) return [];
 			const path = [];
 			let parentId;
 			while(region.parentRegionId){
@@ -59,7 +59,6 @@ module.exports = {
 
 	Mutation:{
 		addMap: async(_, args) => {
-			console.log("add map");
 			const{map} = args;
 			const objectId = new ObjectId();
 			const{name, owner, subregions} = map;
@@ -114,7 +113,7 @@ module.exports = {
 				name: region.name,
 				capital: region.capital,
 				leader: region.leader,
-				flag: region.flag,
+				flag: region.name+' Flag',
 				landmarks: region.landmarks,
 				parentRegionId: region.parentRegionId,
 				subregions:[]
@@ -142,6 +141,68 @@ module.exports = {
 
 			if(updated) return regionId;
 			else return ("Subregion not added");
+		},
+
+		updateRegionField: async(_, args) => {
+			console.log('udpate region field');
+			const{_id, parentId, field, value} = args;
+			const regionId = new ObjectId(_id);
+			const parentRegionId = new ObjectId(parentId);
+
+			let parentFound;
+			parentFound = await Map.findOne({_id:parentRegionId});
+			if(!parentFound){
+				parentFound = await Region.findOne({_id:parentRegionId});
+			}
+			
+
+			const subregions = parentFound.subregions;
+			let index=0;
+			for(let i=0;i<subregions.length;i++){
+				if(subregions[i]._id==_id){
+					index=i;
+				}
+			}
+			
+			subregions[index][field]=value;
+			let parentUpdated;
+			parentUpdated = await Map.updateOne({_id:parentRegionId}, {subregions:subregions});
+			if(!parentUpdated){
+				parentUpdated = await Region.updateOne({_id:parentRegionId}, {subregions:subregions});
+			}
+
+			const updated = await Region.updateOne({_id:regionId}, {[field]:value});
+			if(updated) return ('updated successfully');
+			else return ('updated unsuccessfully');
+		},
+
+		deleteRegion: async(_, args) => {
+			const{_id, parentId} = args;
+			const regionId = new ObejctId(_id);
+			const parentRegionId = new ObejctId(parentId);
+			
+			let parentFound;
+			parentFound = await Map.findOne({_id:parentRegionId});
+			if(!parentFound){
+				parentFound = await Region.findOne({_id:parentRegionid});
+			}
+
+			const subregions = parentFound.subregions;
+			let index=0;
+			for(let i=0;i<subregions.length;i++){
+				if(subregions[i]._id==_id){
+					index=i;
+				}
+			}
+			subregions.splice(index,1);
+			let parentUpdated;
+			parentUpdated = await Map.updateOne({_id:parentRegionId}, {subregions:subregions});
+			if(!parentUpdated){
+				parentUpdated = await Region.updateOne({_id:parentRegionId}, {subregions:subregions});
+			}
+
+			return ("deleted successfully");
+			
 		}
 
 	}
