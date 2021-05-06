@@ -18,7 +18,7 @@ import RegionViewer from './components/region_viewer/RegionViewer';
 import * as mutations from './cache/mutations';
 import {useHistory} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
-import {UpdateRegion_Transaction} from './utils/jsTPS';
+import {UpdateRegion_Transaction, AddRegion_Transaction} from './utils/jsTPS';
 
 
 const Screen = (props) => {
@@ -102,7 +102,10 @@ const Screen = (props) => {
       landmarks:[]
     }
 
-    await AddRegion({variables:{region:newRegion, _id:id, isMap: isMap}});
+    let transaction = new AddRegion_Transaction(id, newRegion, isMap, AddRegion, DeleteRegion);
+    props.tps.addTransaction(transaction);
+    await tpsRedo();
+    //await AddRegion({variables:{region:newRegion, _id:id, isMap: isMap}});
   }
 
   const updateRegionField = async (_id, parentId, newValue, prevValue, field) => {

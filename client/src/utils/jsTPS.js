@@ -1,3 +1,5 @@
+import { throwServerError } from "@apollo/client";
+
 export class jsTPS_Transaction {
     constructor() {};
     doTransaction() {};
@@ -22,6 +24,30 @@ export class UpdateRegion_Transaction extends jsTPS_Transaction{
         await this.updateFunction({variables:{_id:this.regionId, parentId:this.parentId, field:this.field, value:this.prevValue}});
     }
 }
+
+export class AddRegion_Transaction extends jsTPS_Transaction{
+    constructor(parentId, newRegion, isMap, addFunction, deleteFunction){
+        super();
+        this.parentId=parentId;
+        this.newRegion=newRegion;
+        this.isMap=isMap;
+        this.addFunction=addFunction;
+        this.deleteFunction=deleteFunction;
+    }
+
+    async doTransaction(){
+        const{data} = await this.addFunction({variables:{region:this.newRegion, _id:this.parentId, isMap:this.isMap}});
+        if(data){
+            this.regionId=data.addRegion;
+        }
+    }
+
+    async undoTransaction(){
+        await this.deleteFunction({variables:{_id:this.regionId, parentId:this.parentId}});
+    }
+}
+
+
 
 
 
