@@ -144,7 +144,6 @@ module.exports = {
 		},
 
 		updateRegionField: async(_, args) => {
-			console.log('udpate region field');
 			const{_id, parentId, field, value} = args;
 			const regionId = new ObjectId(_id);
 			const parentRegionId = new ObjectId(parentId);
@@ -165,10 +164,13 @@ module.exports = {
 			}
 			
 			subregions[index][field]=value;
-			let parentUpdated;
-			parentUpdated = await Map.updateOne({_id:parentRegionId}, {subregions:subregions});
-			if(!parentUpdated){
-				parentUpdated = await Region.updateOne({_id:parentRegionId}, {subregions:subregions});
+			
+			const isMap = await Map.findOne({_id:parentRegionId});
+			if(!isMap){
+				await Region.updateOne({_id:parentRegionId}, {subregions:subregions});
+			}
+			else{
+				await Map.updateOne({_id:parentRegionId}, {subregions:subregions});
 			}
 
 			const updated = await Region.updateOne({_id:regionId}, {[field]:value});
@@ -178,13 +180,13 @@ module.exports = {
 
 		deleteRegion: async(_, args) => {
 			const{_id, parentId} = args;
-			const regionId = new ObejctId(_id);
-			const parentRegionId = new ObejctId(parentId);
+			const regionId = new ObjectId(_id);
+			const parentRegionId = new ObjectId(parentId);
 			
 			let parentFound;
 			parentFound = await Map.findOne({_id:parentRegionId});
 			if(!parentFound){
-				parentFound = await Region.findOne({_id:parentRegionid});
+				parentFound = await Region.findOne({_id:parentRegionId});
 			}
 
 			const subregions = parentFound.subregions;
@@ -195,13 +197,32 @@ module.exports = {
 				}
 			}
 			subregions.splice(index,1);
-			let parentUpdated;
-			parentUpdated = await Map.updateOne({_id:parentRegionId}, {subregions:subregions});
-			if(!parentUpdated){
-				parentUpdated = await Region.updateOne({_id:parentRegionId}, {subregions:subregions});
+
+			const isMap = await Map.findOne({_id:parentRegionId});
+
+			if(!isMap){
+				await Region.updateOne({_id:parentRegionId}, {subregions:subregions});
+			}
+			else{
+				await Map.updateOne({_id:parentRegionId}, {subregions:subregions});
 			}
 
-			return ("deleted successfully");
+			
+			let found = await Region.findOne({_id: regionId});
+			let subregionQueue=found.subregions;
+			let currentSubregion;
+			let regionDeleted;
+			const deleted = await Region.deleteOne({_id:regionId});
+			
+			while(subregionQueue.length>0){
+				currentSubregion=subregionQueue.shift();
+				found=await Region.findOne({_id:currentSubregion._id});
+				regionDeleted=await Region.deleteOne({_id:currentSubregion._id});
+				subregionQueue=[...subregionQueue, ...found.subregions];
+			}
+			
+			if(deleted) return ("deletion was successful");
+			else return ("deletion was unsuccessful");
 			
 		}
 

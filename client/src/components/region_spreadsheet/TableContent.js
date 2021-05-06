@@ -13,7 +13,11 @@ const TableContent = (props) => {
                         region={props.region}
                         refetchRegion={props.refetchRegion}
                         updateRegionField={props.updateRegionField}
+                        deleteRegion={props.deleteRegion}
                         refetchPath={props.refetchPath}
+                        tps={props.tps}
+                        setRedoable={props.setRedoable}
+                        setUndoable={props.setUndoable}
                     />)
                 )
             }

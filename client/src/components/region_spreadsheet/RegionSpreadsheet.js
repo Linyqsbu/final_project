@@ -8,6 +8,7 @@ import {useState, setState, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 const RegionSpreadsheet = (props) => {
 
+    
     const history = useHistory();
     const{id} = useParams();
 
@@ -21,7 +22,6 @@ const RegionSpreadsheet = (props) => {
     const{loading:loadingM, data:dataM, refetch:refetchM} = useQuery(GET_MAP_BY_ID, {variables:{_id:id}});
     const{loading:loadingR, data:dataR, refetch:refetchR} = useQuery(GET_REGION_BY_ID, {variables:{_id:id}});
     const{data:dataP, refetch:refetchP} = useQuery(GET_PATH, {variables:{_id:id}});
-
     if(dataP){
         props.setParentRegions(dataP.getPath);
     }
@@ -39,23 +39,11 @@ const RegionSpreadsheet = (props) => {
         subregions=region.subregions;
     }
 
+    let redoButtonColor=props.redoable? "white":"gray";
+    let undoButtonColor=props.undoable? "white":"gray";
     
       
     const refetchRegion = async () =>{
-        /*
-        const {loading, data} = await refetch({variables:{_id:id}});
-        if(loading) {console.log("loading");}
-        if(data){
-            if(isMap)
-                region = data.getMapById;
-            
-            else
-                region = data.getRegionById;
-
-            subregions = region.subregions;
-        }
-        */
-
         if(isMap){
             const {data} = await refetchM({variables:{_id:id}});
             if(data){
@@ -86,6 +74,15 @@ const RegionSpreadsheet = (props) => {
         await refetchRegion();
     }
 
+    const handleUndo = async () => {
+        await props.tpsUndo();
+        await refetchRegion();
+    }
+
+    const handleRedo = async ()=> {
+        await props.tpsRedo();
+        await refetchRegion();
+    }
 
     const clickDisabled = () =>{}
 
@@ -97,12 +94,12 @@ const RegionSpreadsheet = (props) => {
                         add
                     </i>
                 </WButton>
-                <WButton style={{color:"white"}} wType="texted">
+                <WButton onClick={handleUndo} style={{color:`${undoButtonColor}`}} wType="texted">
                     <i className = 'material-icons region-spreadsheet-button'>
                         undo
                     </i>
                 </WButton>
-                <WButton style={{color:"white"}} wType="texted">
+                <WButton onClick={handleRedo} style={{color:`${redoButtonColor}`}} wType="texted">
                     <i className = 'material-icons region-spreadsheet-button'>
                         redo
                     </i>
@@ -120,7 +117,11 @@ const RegionSpreadsheet = (props) => {
                 subregions = {subregions}
                 refetchRegion = {refetchRegion} 
                 updateRegionField={props.updateRegionField}
+                deleteRegion={props.deleteRegion}
                 refetchPath={refetchPath}
+                tps={props.tps}
+                setRedoable={props.setRedoable}
+                setUndoable={props.setUndoable}
             />
         </div>
     );

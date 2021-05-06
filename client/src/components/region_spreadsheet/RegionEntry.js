@@ -12,6 +12,9 @@ const RegionEntry = (props) => {
     const[showDelete, toggleShowDelete] = useState(false);
 
     const handleNavigate = () => {
+        props.setRedoable(false);
+        props.setUndoable(false);
+        props.tps.clearAllTransactions();
         history.push(`/region_spreadsheet/${props.subregion._id}`);
     }
 

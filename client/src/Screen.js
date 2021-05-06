@@ -18,19 +18,24 @@ import RegionViewer from './components/region_viewer/RegionViewer';
 import * as mutations from './cache/mutations';
 import {useHistory} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
+import {UpdateRegion_Transaction} from './utils/jsTPS';
+
 
 const Screen = (props) => {
+
 
   const[AddNewMap] = useMutation(mutations.ADDMAP);
   const[DeleteMap] = useMutation(mutations.DELETEMAP);
   const[EditMapName] = useMutation(mutations.EDITMAPNAME);
   const[AddRegion]  = useMutation(mutations.ADDREGION);
   const[UpdateRegionField] = useMutation(mutations.UPDATE_REGION_FIELD);
-
+  const[DeleteRegion] = useMutation(mutations.DELETE_REGION);
 
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
   const[parentRegions, setParentRegions] = useState([]);
+  const[redoable, setRedoable]=useState(false);
+  const[undoable, setUndoable]=useState(false);
 
   
   let maps=[];
@@ -47,6 +52,18 @@ const Screen = (props) => {
   const refetchMaps = async (refetch) => {
     const {loading, error, data} = await refetch();
     if(data){maps=data.getAllMaps;}
+  }
+
+  const tpsRedo = async () => {
+    await props.tps.doTransaction();
+    setRedoable(props.tps.hasTransactionToRedo());
+    setUndoable(props.tps.hasTransactionToUndo());
+  }
+
+  const tpsUndo = async () => {
+    await props.tps.undoTransaction();
+    setRedoable(props.tps.hasTransactionToRedo());
+    setUndoable(props.tps.hasTransactionToUndo());
   }
 
   const createNewMap = async (name) => {
@@ -89,7 +106,13 @@ const Screen = (props) => {
   }
 
   const updateRegionField = async (_id, parentId, newValue, prevValue, field) => {
-    await UpdateRegionField({variables:{_id:_id, parentId:parentId, value:newValue, field:field}});
+    let transaction = new UpdateRegion_Transaction(_id, parentId, newValue, prevValue, field, UpdateRegionField);
+    props.tps.addTransaction(transaction);
+    await tpsRedo();
+  }
+
+  const deleteRegion = async (_id, parentId) => {
+    await DeleteRegion({variables:{_id:_id, parentId:parentId}});
   }
 
   
@@ -162,6 +185,14 @@ const Screen = (props) => {
               setParentRegions={setParentRegions}
               parentRegions={parentRegions}
               updateRegionField={updateRegionField}
+              deleteRegion={deleteRegion}
+              tps={props.tps}
+              redoable={redoable}
+              undoable={undoable}
+              setRedoable={setRedoable}
+              setUndoable={setUndoable}
+              tpsUndo={tpsUndo}
+              tpsRedo={tpsRedo}
             />
           </Route>
 

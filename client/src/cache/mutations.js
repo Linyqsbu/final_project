@@ -62,3 +62,9 @@ export const UPDATE_REGION_FIELD = gql`
 		updateRegionField(_id:$_id, parentId:$parentId, field:$field, value:$value)
 	}
 `;
+
+export const DELETE_REGION = gql`
+	mutation DeleteRegion($_id:String!, $parentId:String!){
+		deleteRegion(_id:$_id, parentId:$parentId)
+	}
+`;

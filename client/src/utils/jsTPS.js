@@ -3,194 +3,24 @@ export class jsTPS_Transaction {
     doTransaction() {};
     undoTransaction () {};
 }
-/*  Handles list name changes, or any other top level details of a todolist that may be added   */
-export class UpdateListField_Transaction extends jsTPS_Transaction {
-    constructor(_id, field, prev, update, callback) {
+export class UpdateRegion_Transaction extends jsTPS_Transaction{
+    constructor(regionId, parentId, newValue, prevValue, field, callback){
         super();
-        this.prev = prev;
-        this.update = update;
-        this.field = field;
-        this._id = _id;
-        this.updateFunction = callback;
-    }
-    async doTransaction() {
-		const { data } = await this.updateFunction({ variables: { _id: this._id, field: this.field, value: this.update }});
-		return data;
-    }
-    async undoTransaction() {
-        const { data } = await this.updateFunction({ variables: { _id: this._id, field: this.field, value: this.prev }});
-		return data;
-    }
-}
-
-/*  Handles item reordering */
-export class ReorderItems_Transaction extends jsTPS_Transaction {
-    constructor(listID, itemID, dir, callback) {
-        super();
-        this.listID = listID;
-        this.itemID = itemID;
-		this.dir = dir;
-		this.revDir = dir === 1 ? -1 : 1;
-		this.updateFunction = callback;
-	}
-
-    async doTransaction() {
-		const { data } = await this.updateFunction({ variables: { itemId: this.itemID, _id: this.listID, direction: this.dir }});
-		return data;
-    }
-
-    async undoTransaction() {
-		const {data} = await this.updateFunction({ variables: { itemId: this.itemID, _id: this.listID, direction: this.revDir }});
-		return data;
-
-    }
-    
-}
-
-
-export class SortItems_Transaction extends jsTPS_Transaction{
-    constructor(listId, sortCallback, unsortCallback, oldListItems){
-        super();
-        this.listId=listId;
-        this.sortCallback=sortCallback;
-        this.unsortCallback=unsortCallback;
-        this.oldListItems=oldListItems;
+        this.regionId=regionId;
+        this.parentId=parentId;
+        this.newValue=newValue;
+        this.prevValue=prevValue;
+        this.field=field;
+        this.updateFunction=callback;
     }
 
     async doTransaction(){
-        const{data}=await this.sortCallback({variables:{_id:this.listId}});
-        return data;
+        await this.updateFunction({variables:{_id:this.regionId, parentId:this.parentId, field:this.field, value:this.newValue}});
     }
 
     async undoTransaction(){
-        const {data} =await this.unsortCallback({variables:{_id:this.listId, oldListItems: this.oldListItems}});
-        return data;
+        await this.updateFunction({variables:{_id:this.regionId, parentId:this.parentId, field:this.field, value:this.prevValue}});
     }
-}
-
-
-export class EditItem_Transaction extends jsTPS_Transaction {
-	constructor(listID, itemID, field, prev, update, flag, callback) {
-		super();
-		this.listID = listID;
-		this.itemID = itemID;
-		this.field = field;
-		this.prev = prev;
-		this.update = update;
-		this.flag = flag;
-		this.updateFunction = callback;
-	}	
-
-	async doTransaction() {
-		const { data } = await this.updateFunction({ 
-				variables:{  itemId: this.itemID, _id: this.listID, 
-							 field: this.field, value: this.update, 
-							 flag: this.flag 
-						  }
-			});
-		return data;
-    }
-
-    async undoTransaction() {
-		const { data } = await this.updateFunction({ 
-				variables:{  itemId: this.itemID, _id: this.listID, 
-							field: this.field, value: this.prev, 
-							flag: this.flag 
-						  }
-			});
-		return data;
-
-    }
-}
-
-export class DeleteItem_Transaction extends jsTPS_Transaction {
-    constructor(listId, itemId, item, index, delFunc, addFunc){
-        super();
-        this.listId=listId;
-        this.itemId=itemId;
-        this.item=item;
-        this.index=index;
-        this.delFunc=delFunc;
-        this.addFunc=addFunc;
-    }
-
-    async doTransaction(){
-        const {data} = await this.delFunc({variables:{ _id:this.listId, itemId: this.itemId}});
-        return data;
-    }
-
-    async undoTransaction(){
-        const {data} = await this.addFunc({variables:{_id:this.listId, item:this.item, index:this.index}});
-        return data;
-    }
-}
-
-export class AddItem_Transaction extends jsTPS_Transaction {
-    constructor(listId, item, addFunc, delFunc){
-        super();
-        this.listId=listId;
-        this.item=item;
-        this.addFunc=addFunc;
-        this.delFunc=delFunc;
-    }
-
-    async doTransaction(){
-        const {data} = await this.addFunc({variables:{_id:this.listId, item:this.item}});
-        return data;
-    }
-
-    async undoTransaction(){
-        const {data} = await this.delFunc({variables:{_id:this.listId, itemId:this.item.id}});
-        return data;
-    }
-}
-
-
-
-/*  Handles create/delete of list items */
-export class UpdateListItems_Transaction extends jsTPS_Transaction {
-    // opcodes: 0 - delete, 1 - add 
-    constructor(listID, itemID, item, opcode, addfunc, delfunc, index) {
-        super();
-        this.listID = listID;
-		this.itemID = itemID;
-		this.item = item;
-        this.addFunction = addfunc;
-        this.deleteFunction = delfunc;
-        this.opcode = opcode;
-        this.index=index;
-    }
-    async doTransaction() {
-        console.log(this.itemID);
-		let data;
-        this.opcode === 0 ? { data } = await this.deleteFunction({
-							variables: {itemId: this.itemID, _id: this.listID}})
-
-						  : { data } = await this.addFunction({
-							variables: {item: this.item, _id: this.listID}});
-        
-        
-		if(this.opcode === 1) {
-            this.item._id = this.itemID = data.addItem;
-		}
-		return data;
-    }
-    // Since delete/add are opposites, flip matching opcode
-    async undoTransaction() {
-        console.log(this.itemID);
-		let data;
-        this.opcode === 1 ? { data } = await this.deleteFunction({
-							variables: {itemId: this.itemID, _id: this.listID}})
-                          : { data } = await this.addFunction({
-							variables: {item: this.item, _id: this.listID, index:this.index}});
-        /*
-		if(this.opcode !== 1) {
-            this.item._id = this.itemID = data.addItemWithIndex;
-        }
-        */
-		return data;
-    }
-    
 }
 
 
