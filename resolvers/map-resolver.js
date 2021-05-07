@@ -176,10 +176,10 @@ module.exports = {
 		},
 
 		deleteRegion: async(_, args) => {
-			const{_id, parentId, index} = args;
+			const{_id, parentId} = args;
 			const regionId = new ObjectId(_id);
 			const parentRegionId = new ObjectId(parentId);
-			
+			console.log(_id);
 			let parentFound;
 			parentFound = await Map.findOne({_id:parentRegionId});
 			if(!parentFound){
@@ -187,6 +187,14 @@ module.exports = {
 			}
 
 			const subregions = parentFound.subregions;
+			let index=0;
+			for(let i=0;i<subregions.length;i++){
+				if(subregions[i]._id == _id){
+					index=i;
+					break;
+				}
+			}
+
 			subregions.splice(index,1);
 
 			const isMap = await Map.findOne({_id:parentRegionId});
@@ -299,20 +307,14 @@ module.exports = {
 		unsortRegions: async (_, args) => {
 			const{regionId, prevSubregions, isMap} = args;
 			const region = new ObjectId(regionId);
-			let found;
-			if(isMap){
-				found=await Map.findOne({_id:region});
-			}
-			else{
-				found = await Region.findOne({_id:region});
-			}
-			const subregions = prevSubregions;
+			console.log(region);
 			let updated;
 			if(isMap){
-				updated = Map.updateOne({_id:region}, {subregions:subregions});
+				updated = await Map.updateOne({_id:region}, {subregions:prevSubregions});
 			}
+
 			else{
-				updated = Region.findOne({_id:region}, {subregions:subregions});
+				updated = await Region.updateOne({_id:region}, {subregions:prevSubregions});
 			}
 			if(updated) return ("the table is unsorted");
 			else return ("the table is not unsorted");

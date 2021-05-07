@@ -60,7 +60,7 @@ export class DeleteRegion_Transaction extends jsTPS_Transaction{
     }
     
     async doTransaction(){
-        const{data} = await this.deleteFunction({variables:{_id:this.regionId, parentId:this.parentId, index:this.index}});
+        const{data} = await this.deleteFunction({variables:{_id:this.regionId, parentId:this.parentId}});
     }
 
     async undoTransaction(){
@@ -73,10 +73,30 @@ export class SortRegions_Transaction extends jsTPS_Transaction{
         super();
         this.regionId = regionId;
         this.field=field;
-        this.prevSubregions=prevSubregions;
         this.isMap=isMap;
         this.sortFunction=sortFunction;
         this.unsortFunction=unsortFunction;
+        this.prevSubregions=[]
+        for(let i=0;i<prevSubregions.length;i++){
+            this.prevSubregions.push({
+                _id:prevSubregions[i]._id,
+                name:prevSubregions[i].name,
+                capital:prevSubregions[i].capital,
+                leader:prevSubregions[i].leader,
+                flag:prevSubregions[i].flag,
+                parentRegionId:prevSubregions[i].parentRegionId,
+                landmarks:prevSubregions[i].landmarks,
+                subregions:prevSubregions[i].subregions
+            });
+        }
+    }
+
+    async doTransaction(){
+        await this.sortFunction({variables:{regionId:this.regionId, field:this.field, isMap:this.isMap}});
+    }
+
+    async undoTransaction(){
+        await this.unsortFunction({variables:{regionId:this.regionId, prevSubregions:this.prevSubregions, isMap:this.isMap}});
     }
 }
 

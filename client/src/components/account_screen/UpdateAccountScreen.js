@@ -9,7 +9,6 @@ import {LOGOUT} from '../../cache/mutations';
 const UpdateAccountScreen = (props) => {
     const history=useHistory();
     const[input, setInput] = useState({email:'', password:'', name:''});
-    const[loading, toggleLoading] = useState(false);
     const[Update] = useMutation(UPDATE);
     const[Logout] = useMutation(LOGOUT);
     const client = useApolloClient();

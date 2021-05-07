@@ -35,6 +35,7 @@ const Screen = (props) => {
   const[DeleteRegion] = useMutation(mutations.DELETE_REGION);
   const[AddRegionBack] = useMutation(mutations.ADD_REGION_BACK);
   const[SortRegions] = useMutation(mutations.SORT_REGIONS);
+  const[UnsortRegions] = useMutation(mutations.UNSORT_REGIONS);
 
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
@@ -135,11 +136,9 @@ const Screen = (props) => {
   }
 
   const sortRegions = async (_id, prevSubregions, field, isMap) => {
-    //let transaction = new SortRegions_Transaction(_id, field, prevSubregions, isMap, SortRegions, UnsortRegions);
-    //props.addTransaction(transaction);
-    //await tpsRedo();
-
-    await SortRegions({variables:{regionId:_id, field:field, isMap:isMap}});
+   let transaction = new SortRegions_Transaction(_id, field, prevSubregions, isMap, SortRegions, UnsortRegions);
+    props.tps.addTransaction(transaction);
+    await tpsRedo();
   }
 
   
