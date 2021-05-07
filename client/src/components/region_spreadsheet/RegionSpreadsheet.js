@@ -122,6 +122,7 @@ const RegionSpreadsheet = (props) => {
                 tps={props.tps}
                 setRedoable={props.setRedoable}
                 setUndoable={props.setUndoable}
+                isMap={isMap}
             />
         </div>
     );

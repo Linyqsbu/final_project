@@ -30,7 +30,7 @@ const Screen = (props) => {
   const[AddRegion]  = useMutation(mutations.ADDREGION);
   const[UpdateRegionField] = useMutation(mutations.UPDATE_REGION_FIELD);
   const[DeleteRegion] = useMutation(mutations.DELETE_REGION);
-  const[AddRegionsBack] = useMutation(mutations.ADD_REGIONS_BACK);
+  const[AddRegionBack] = useMutation(mutations.ADD_REGION_BACK);
 
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
@@ -115,8 +115,17 @@ const Screen = (props) => {
     await tpsRedo();
   }
 
-  const deleteRegion = async (_id, parentId, index) => {
-    let transaction = new DeleteRegion_Transaction(_id, parentId, index, DeleteRegion, AddRegionsBack);
+  const deleteRegion = async (_id, parentId, index, subregion, isMap) => {
+    let regionToDelete = {
+      _id:subregion._id,
+      name:subregion.name,
+      capital:subregion.capital,
+      leader:subregion.leader,
+      flag:subregion.flag,
+      landmarks:subregion.landmarks,
+      parentRegionId:subregion.parentRegionId,
+    }
+    let transaction = new DeleteRegion_Transaction(_id, parentId, index, regionToDelete, isMap, DeleteRegion, AddRegionBack);
     props.tps.addTransaction(transaction);
     await tpsRedo();
   }

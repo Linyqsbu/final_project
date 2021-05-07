@@ -116,12 +116,11 @@ module.exports = {
 				flag: region.name+' Flag',
 				landmarks: region.landmarks,
 				parentRegionId: region.parentRegionId,
-				subregions:[]
+				subregions:region.subregions
 			});
 
 			let found;
 			if(isMap){
-				
 				found = await Map.findOne({_id:parentId});
 			}
 			else{
@@ -191,14 +190,17 @@ module.exports = {
 			subregions.splice(index,1);
 
 			const isMap = await Map.findOne({_id:parentRegionId});
-
+			let updated;
 			if(!isMap){
-				await Region.updateOne({_id:parentRegionId}, {subregions:subregions});
+				updated = await Region.updateOne({_id:parentRegionId}, {subregions:subregions});
 			}
 			else{
-				await Map.updateOne({_id:parentRegionId}, {subregions:subregions});
+				updated = await Map.updateOne({_id:parentRegionId}, {subregions:subregions});
 			}
+			if(updated) return ("deleted successfully");
+			else return ("deleted unsuccessfully");
 
+			/*
 			const regionsToReturn=[];
 			
 			let found = await Region.findOne({_id: regionId});
@@ -216,10 +218,48 @@ module.exports = {
 				subregionQueue=[...subregionQueue, ...found.subregions];
 			}
 			
-			console.log(regionsToReturn);
 			return regionsToReturn;
+			*/
 		},
 
+		addRegionBack: async (_, args) => {
+			const{parentId, region, index, isMap} = args;
+			const parent = new ObjectId(parentId);
+			let found;
+			if(isMap){
+				found = await Map.findOne({_id:parent});
+			}
+			else{
+				found=await Region.findOne({_id:parent});
+			}
+
+			const subregions=found.subregions;
+			const regionToAdd = {
+				_id: new ObjectId(region._id),
+				name:region.name,
+				capital:region.capital,
+				leader:region.leader,
+				parentRegionId:region.parentRegionId,
+				flag:region.flag,
+				landmarks:region.landmarks,
+				subregions:[]
+			}
+			subregions.splice(index,0,regionToAdd);
+			
+			let updated;
+			if(isMap){
+				updated = await Map.updateOne({_id:parent}, {subregions:subregions});
+			}
+			else{
+				updated = await Region.updateOne({_id:parent}, {subregions:subregions});
+			}
+
+			if(updated) return ("the region is added back");
+			else return ("the region is not added back");
+		},
+
+
+		/*
 		addRegionsBack:async (_, args) => {
 			
 			const{parentId, regionsToAdd, index} = args;
@@ -261,7 +301,6 @@ module.exports = {
 					landmarks: regionsToAdd[i].landmarks,
 					subregions: regionsToAdd[i].subregions
 				})
-				
 				newRegion.save();
 			}
 
@@ -269,6 +308,7 @@ module.exports = {
 			else return ("unsuccessful update");
 			
 		}
+		*/
 
 	}
 }
