@@ -100,6 +100,25 @@ export class SortRegions_Transaction extends jsTPS_Transaction{
     }
 }
 
+export class AddLandmark_Transaction extends jsTPS_Transaction{
+    constructor(regionId, landmark, parentId, addFunction, deleteFunction){
+        super();
+        this.regionId=regionId;
+        this.landmark=landmark;
+        this.parentId=parentId;
+        this.addFunction=addFunction;
+        this.deleteFunction=deleteFunction;
+    }
+
+    async doTransaction(){
+        await this.addFunction({variables:{_id:this.regionId, landmark:this.landmark, parentId:this.parentId}});
+    }
+
+    async undoTransaction(){
+        await this.deleteFunction({variables:{_id:this.regionId, landmark:this.landmark, parentId:this.parentId}});
+    }
+}
+
 
 
 

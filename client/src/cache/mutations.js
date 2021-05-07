@@ -86,3 +86,15 @@ export const UNSORT_REGIONS = gql`
 		unsortRegions(regionId:$regionId, prevSubregions:$prevSubregions, isMap:$isMap)
 	}
 `;
+
+export const ADD_LANDMARK = gql`
+	mutation AddLandmark($_id:String!, $landmark:String!, $parentId:String!){
+		addLandmark(_id:$_id, landmark:$landmark, parentId:$parentId)
+	}
+`;
+
+export const DELETE_LANDMARK = gql`
+	mutation DeleteLandmark($_id:String!, $landmark:String!, $parentId:String!){
+		deleteLandmark(_id:$_id, landmark:$landmark, parentId:$parentId)
+	}
+`;

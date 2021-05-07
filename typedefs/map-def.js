@@ -42,8 +42,8 @@ const typeDefs = gql`
         updateRegionField(_id: String!, parentId:String!, field: String!, value: String!): String
         sortRegions(regionId: String!, field: String!, isMap:Boolean!): String
         unsortRegions(regionId:String! prevSubregions:[RegionInput]!, isMap:Boolean!): String
-        addLandmark(landmark: String!): String
-        deleteLandmark(landmark: String!): String
+        addLandmark(_id:String!, landmark: String!, parentId:String!): String
+        deleteLandmark(_id:String!, landmark:String!, parentId:String!): String
         changeParentRegion(newParentId: String!, oldParentId:String!, regionId:String!): String
     }
 

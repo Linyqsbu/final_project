@@ -84,7 +84,7 @@ const RegionEntry = (props) => {
                     <div>{props.subregion.flag}</div>
                 </WCol>
                 <WCol className="region-entry" size="3">
-                    <div>{props.subregion.landmarks}</div>
+                    <div>{props.subregion.landmarks.length? props.subregion.landmarks[0]+". . .":null}</div>
                 </WCol>
             </WRow>
             {

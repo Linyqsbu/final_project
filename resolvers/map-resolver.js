@@ -318,6 +318,79 @@ module.exports = {
 			}
 			if(updated) return ("the table is unsorted");
 			else return ("the table is not unsorted");
+		},
+
+		addLandmark: async (_, args) => {
+			const {landmark, _id, parentId} = args;
+			const regionId = new ObjectId(_id);
+			const parentRegionId = new ObjectId(parentId);
+			const found = await Region.findOne({_id:regionId});
+			const landmarks = found.landmarks;
+			const repeat = landmarks.find(landmarkE => landmarkE==landmark);
+			if(repeat) return ("Landmark with this name already exists");
+			
+			landmarks.push(landmark);
+			const updated = await Region.updateOne({_id:regionId}, {landmarks:landmarks});
+			
+			let parentFound = await Map.findOne({_id:parentRegionId});
+			if(!parentFound){
+				parentFound = await Region.findByIdAndRemove({_id:parentRegionId});
+			}
+			const subregions = parentFound.subregions;
+			const subregion = subregions.find(subregion => subregion._id==_id);
+			subregion.landmarks.push(landmark);
+			
+			let isMap = await Map.findOne({_id:parentRegionId});
+			if(isMap){
+				await Map.updateOne({_id:parentRegionId},{subregions:subregions});
+			}
+			else{
+				await Region.updateOne({_id:parentRegionId}, {subregions:subregions});
+			}
+			if(updated) return ("Landmark is added");
+			else return ("Landmark is not added");
+		},
+
+		deleteLandmark: async (_, args) => {
+			const{landmark, _id, parentId} = args;
+			const regionId = new ObjectId(_id);
+			const parentRegionId = new ObjectId(parentId);
+			
+			const found = await Region.findOne({_id:regionId});
+			const landmarks = found.landmarks;
+			let index=0;
+			for(let i=0;i<landmarks.length;i++){
+				if(landmarks[i]==landmark){
+					index=i;
+				}
+			}
+			landmarks.splice(index,1);
+			const updated = await Region.updateOne({_id:regionId}, {landmarks:landmarks});
+			
+			let isMap=true;
+			let parentFound = await Map.findOne({_id:parentRegionId});
+			if(!parentFound){
+				isMap=false;
+				parentFound = await Region.findOne({_id:parentRegionId});
+			}
+
+			const subregions = parentFound.subregions;
+			const subregion = subregions.find(subregion => subregion._id == _id);
+			for(let i=0;i<subregion.landmarks.length;i++){
+				if(subregion.landmarks[i] == landmark){
+					subregion.landmarks.splice(i,1);
+				}
+			}
+			
+			if(isMap){
+				await Map.updateOne({_id:parentRegionId}, {subregions:subregions});
+			}
+			else{
+				await Region.updateOne({_id:parentRegionId}, {subregions:subregions});
+			}
+			
+			if(updated) return ("landmark is deleted");
+			else return ("landmark is not deleted");
 		}
 
 		/*

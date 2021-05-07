@@ -21,6 +21,7 @@ import {useParams} from 'react-router-dom';
 import {UpdateRegion_Transaction, 
         AddRegion_Transaction,
         SortRegions_Transaction,
+        AddLandmark_Transaction,
         DeleteRegion_Transaction} from './utils/jsTPS';
 
 
@@ -36,7 +37,8 @@ const Screen = (props) => {
   const[AddRegionBack] = useMutation(mutations.ADD_REGION_BACK);
   const[SortRegions] = useMutation(mutations.SORT_REGIONS);
   const[UnsortRegions] = useMutation(mutations.UNSORT_REGIONS);
-
+  const[AddLandmark] = useMutation(mutations.ADD_LANDMARK);
+  const[DeleteLandmark] = useMutation(mutations.DELETE_LANDMARK);
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
   const[parentRegions, setParentRegions] = useState([]);
@@ -141,7 +143,11 @@ const Screen = (props) => {
     await tpsRedo();
   }
 
-  
+  const addLandmark = async (_id, landmark, parentId) => {
+    let transaction = new AddLandmark_Transaction(_id, landmark, parentId, AddLandmark, DeleteLandmark);
+    props.tps.addTransaction(transaction);
+    await tpsRedo();
+  }
   
 
   return(
@@ -160,7 +166,7 @@ const Screen = (props) => {
             </WNavItem>
           </ul>
           <ul>
-            <WNavItem className="parent-entry" style={{position:"absolute", left:"10%"}}>
+            <WNavItem className="parent-entry" style={{left:"10%", overflowX:"auto", width:"50%"}}>
               <PathContainer
                 path={path}
                 parentRegions={parentRegions}
@@ -234,6 +240,12 @@ const Screen = (props) => {
               maps={maps}
               parentRegions={parentRegions}
               setParentRegions={setParentRegions}
+              tps={props.tps}
+              undoable={undoable}
+              redoable={redoable}
+              addLandmark={addLandmark}
+              tpsUndo={tpsUndo}
+              tpsRedo={tpsRedo}
             />
           </Route>
 
