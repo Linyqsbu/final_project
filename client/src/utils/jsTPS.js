@@ -68,6 +68,18 @@ export class DeleteRegion_Transaction extends jsTPS_Transaction{
     }
 }
 
+export class SortRegions_Transaction extends jsTPS_Transaction{
+    constructor(regionId, field, prevSubregions, isMap, sortFunction, unsortFunction){
+        super();
+        this.regionId = regionId;
+        this.field=field;
+        this.prevSubregions=prevSubregions;
+        this.isMap=isMap;
+        this.sortFunction=sortFunction;
+        this.unsortFunction=unsortFunction;
+    }
+}
+
 
 
 

@@ -74,3 +74,9 @@ export const ADD_REGION_BACK = gql`
 		addRegionBack(parentId:$parentId, region:$region, index:$index, isMap:$isMap)
 	}
 `;
+
+export const SORT_REGIONS = gql`
+	mutation SortRegions($regionId:String!, $field:String!, $isMap:Boolean!){
+		sortRegions(regionId:$regionId, field:$field, isMap:$isMap)
+	}
+`;

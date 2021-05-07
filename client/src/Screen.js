@@ -18,7 +18,10 @@ import RegionViewer from './components/region_viewer/RegionViewer';
 import * as mutations from './cache/mutations';
 import {useHistory} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
-import {UpdateRegion_Transaction, AddRegion_Transaction, DeleteRegion_Transaction} from './utils/jsTPS';
+import {UpdateRegion_Transaction, 
+        AddRegion_Transaction,
+        SortRegions_Transaction,
+        DeleteRegion_Transaction} from './utils/jsTPS';
 
 
 const Screen = (props) => {
@@ -31,6 +34,7 @@ const Screen = (props) => {
   const[UpdateRegionField] = useMutation(mutations.UPDATE_REGION_FIELD);
   const[DeleteRegion] = useMutation(mutations.DELETE_REGION);
   const[AddRegionBack] = useMutation(mutations.ADD_REGION_BACK);
+  const[SortRegions] = useMutation(mutations.SORT_REGIONS);
 
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
@@ -130,6 +134,14 @@ const Screen = (props) => {
     await tpsRedo();
   }
 
+  const sortRegions = async (_id, prevSubregions, field, isMap) => {
+    //let transaction = new SortRegions_Transaction(_id, field, prevSubregions, isMap, SortRegions, UnsortRegions);
+    //props.addTransaction(transaction);
+    //await tpsRedo();
+
+    await SortRegions({variables:{regionId:_id, field:field, isMap:isMap}});
+  }
+
   
   
 
@@ -139,7 +151,13 @@ const Screen = (props) => {
         <WNavbar style={{backgroundColor:'black'}}>
           <ul>
             <WNavItem>
-              <Logo setParentRegions={setParentRegions} user={props.user}/>
+              <Logo 
+                tps={props.tps} 
+                setParentRegions={setParentRegions} 
+                user={props.user}
+                setUndoable={setUndoable}
+                setRedoable={setRedoable}
+              />
             </WNavItem>
           </ul>
           <ul>
@@ -200,6 +218,7 @@ const Screen = (props) => {
               setParentRegions={setParentRegions}
               parentRegions={parentRegions}
               updateRegionField={updateRegionField}
+              sortRegions={sortRegions}
               deleteRegion={deleteRegion}
               tps={props.tps}
               redoable={redoable}

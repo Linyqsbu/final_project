@@ -29,7 +29,6 @@ const RegionSpreadsheet = (props) => {
     if(loadingM || loadingR) {console.log("loading");}
     
     if(dataM){
-        console.log("this is a map");
         region = dataM.getMapById;
         subregions = region.subregions;
     }
@@ -111,7 +110,12 @@ const RegionSpreadsheet = (props) => {
                     </span>
                 </span>
             </div>
-            <RegionHeader/>
+            <RegionHeader
+                sortRegions={props.sortRegions}
+                region={region}
+                isMap={isMap}
+                refetchRegion={refetchRegion}
+            />
             <TableContent
                 region={region}
                 subregions = {subregions}

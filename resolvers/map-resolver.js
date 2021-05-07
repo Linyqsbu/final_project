@@ -258,6 +258,65 @@ module.exports = {
 			else return ("the region is not added back");
 		},
 
+		sortRegions: async (_, args) => {
+			const {regionId, field, isMap} = args;
+			const region = new ObjectId (regionId);
+			let found;
+			if(isMap){
+				found = await Map.findOne({_id:region});
+			}
+			else{
+				found = await Region.findOne({_id:region});
+			}
+			
+			const subregions = found.subregions;
+			let sorted=true;
+			for(let i=1; i<subregions.length;i++){
+				if(subregions[i][field]<subregions[i-1][field]){
+					sorted=false;
+					break;
+				}
+			}
+
+			if(!sorted)
+				subregions.sort((a,b) => (a[field] > b[field])? 1: ((b[field]>a[field])? -1:0));
+			else
+				subregions.sort((a,b) => (a[field] < b[field])? 1: ((b[field]<a[field])? -1:0));
+			
+			let updated;
+
+			if(isMap){
+				updated = await Map.updateOne({_id:region}, {subregions:subregions});
+			}
+			else{
+				updated = await Region.updateOne({_id:region}, {subregions:subregions});
+			}
+			
+			if(updated) return ("the table is sorted");
+			else return ("the table is not sorted successfully");
+		},
+
+		unsortRegions: async (_, args) => {
+			const{regionId, prevSubregions, isMap} = args;
+			const region = new ObjectId(regionId);
+			let found;
+			if(isMap){
+				found=await Map.findOne({_id:region});
+			}
+			else{
+				found = await Region.findOne({_id:region});
+			}
+			const subregions = prevSubregions;
+			let updated;
+			if(isMap){
+				updated = Map.updateOne({_id:region}, {subregions:subregions});
+			}
+			else{
+				updated = Region.findOne({_id:region}, {subregions:subregions});
+			}
+			if(updated) return ("the table is unsorted");
+			else return ("the table is not unsorted");
+		}
 
 		/*
 		addRegionsBack:async (_, args) => {
