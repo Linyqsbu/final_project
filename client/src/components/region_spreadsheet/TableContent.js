@@ -18,6 +18,7 @@ const TableContent = (props) => {
                         tps={props.tps}
                         setRedoable={props.setRedoable}
                         setUndoable={props.setUndoable}
+                        index={props.subregions.indexOf(subregion)}
                     />)
                 )
             }

@@ -18,7 +18,7 @@ import RegionViewer from './components/region_viewer/RegionViewer';
 import * as mutations from './cache/mutations';
 import {useHistory} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
-import {UpdateRegion_Transaction, AddRegion_Transaction} from './utils/jsTPS';
+import {UpdateRegion_Transaction, AddRegion_Transaction, DeleteRegion_Transaction} from './utils/jsTPS';
 
 
 const Screen = (props) => {
@@ -30,6 +30,7 @@ const Screen = (props) => {
   const[AddRegion]  = useMutation(mutations.ADDREGION);
   const[UpdateRegionField] = useMutation(mutations.UPDATE_REGION_FIELD);
   const[DeleteRegion] = useMutation(mutations.DELETE_REGION);
+  const[AddRegionsBack] = useMutation(mutations.ADD_REGIONS_BACK);
 
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
@@ -114,8 +115,10 @@ const Screen = (props) => {
     await tpsRedo();
   }
 
-  const deleteRegion = async (_id, parentId) => {
-    await DeleteRegion({variables:{_id:_id, parentId:parentId}});
+  const deleteRegion = async (_id, parentId, index) => {
+    let transaction = new DeleteRegion_Transaction(_id, parentId, index, DeleteRegion, AddRegionsBack);
+    props.tps.addTransaction(transaction);
+    await tpsRedo();
   }
 
   

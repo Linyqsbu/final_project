@@ -47,6 +47,44 @@ export class AddRegion_Transaction extends jsTPS_Transaction{
     }
 }
 
+export class DeleteRegion_Transaction extends jsTPS_Transaction{
+    constructor(regionId, parentId, index, deleteFunction, addFunction){
+        super();
+        this.regionId=regionId;
+        this.parentId=parentId;
+        this.index=index;
+        this.deleteFunction=deleteFunction;
+        this.addFunction=addFunction;
+    }
+    
+    async doTransaction(){
+        const{data} = await this.deleteFunction({variables:{_id:this.regionId, parentId:this.parentId, index:this.index}});
+        if(data){
+            let regionsToAdd = data.deleteRegion;
+            this.regionsToAdd=[];
+            for(let i=0;i<regionsToAdd.length;i++){
+                let newRegion={
+                    _id:regionsToAdd[i]._id,
+                    name:regionsToAdd[i].name,
+                    capital:regionsToAdd[i].capital,
+                    leader:regionsToAdd[i].leader,
+                    flag: regionsToAdd[i].flag,
+                    parentRegionId: regionsToAdd[i].parentRegionId,
+                    landmarks: regionsToAdd[i].landmarks,
+                    subregions: regionsToAdd[i].subregions
+                }
+                this.regionsToAdd.push(newRegion);
+            }
+
+            console.log(regionsToAdd);
+        }
+    }
+
+    async undoTransaction(){
+        await this.addFunction({variables:{regionsToAdd:this.regionsToAdd, parentId:this.parentId, index:this.index}});
+    }
+}
+
 
 
 

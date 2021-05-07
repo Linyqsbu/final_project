@@ -64,7 +64,30 @@ export const UPDATE_REGION_FIELD = gql`
 `;
 
 export const DELETE_REGION = gql`
-	mutation DeleteRegion($_id:String!, $parentId:String!){
-		deleteRegion(_id:$_id, parentId:$parentId)
+	mutation DeleteRegion($_id:String!, $parentId:String!, $index:Int!){
+		deleteRegion(_id:$_id, parentId:$parentId, index:$index){
+			_id
+			name
+			capital
+			leader
+			flag
+			landmarks
+			parentRegionId
+			subregions{
+				_id
+				name
+				capital
+				leader
+				flag
+				parentRegionId
+				landmarks
+			}
+		}
+	}
+`;
+
+export const ADD_REGIONS_BACK = gql`
+	mutation AddRegionsBack($parentId:String!, $regionsToAdd:[RegionInput]!, $index:Int!){
+		addRegionsBack(parentId:$parentId, regionsToAdd:$regionsToAdd, index:$index)
 	}
 `;
