@@ -119,6 +119,27 @@ export class AddLandmark_Transaction extends jsTPS_Transaction{
     }
 }
 
+export class DeleteLandmark_Transaction extends jsTPS_Transaction{
+    constructor(regionId, landmark, parentId, addFunction, deleteFunction){
+        super();
+        this.regionId=regionId;
+        this.landmark=landmark;
+        this.parentId=parentId;
+        this.addFunction=addFunction;
+        this.deleteFunction=deleteFunction;
+    }
+
+    async doTransaction(){
+        const {data} = await this.deleteFunction({variables:{_id:this.regionId, landmark:this.landmark, parentId:this.parentId}});
+        this.index = data.deleteLandmark;
+        console.log(this.index);
+    }
+
+    async undoTransaction(){
+        await this.addFunction({variables:{_id:this.regionId, landmark:this.landmark, parentId:this.parentId, index:this.index}});
+    }
+}
+
 
 
 

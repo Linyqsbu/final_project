@@ -8,7 +8,6 @@ const ParentRegionEntry = (props) => {
 
     }
 
-    console.log(props);
     return(
         <span style={{paddingLeft:"30px", cursor:"pointer"}} onClick={handleNavigate}>
             {props.parentRegion.name}

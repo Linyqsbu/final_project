@@ -22,7 +22,8 @@ import {UpdateRegion_Transaction,
         AddRegion_Transaction,
         SortRegions_Transaction,
         AddLandmark_Transaction,
-        DeleteRegion_Transaction} from './utils/jsTPS';
+        DeleteRegion_Transaction,
+        DeleteLandmark_Transaction} from './utils/jsTPS';
 
 
 const Screen = (props) => {
@@ -149,6 +150,11 @@ const Screen = (props) => {
     await tpsRedo();
   }
   
+  const deleteLandmark = async (_id, landmark, parentId) => {
+    let transaction = new DeleteLandmark_Transaction(_id, landmark, parentId, AddLandmark, DeleteLandmark);
+    props.tps.addTransaction(transaction);
+    await tpsRedo();
+  }
 
   return(
     <WLayout wLayout="header">
@@ -244,6 +250,7 @@ const Screen = (props) => {
               undoable={undoable}
               redoable={redoable}
               addLandmark={addLandmark}
+              deleteLandmark={deleteLandmark}
               tpsUndo={tpsUndo}
               tpsRedo={tpsRedo}
             />

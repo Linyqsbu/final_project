@@ -81,3 +81,9 @@ export const GET_PATH = gql`
 		}
 	}
 `;
+
+export const GET_CHILDREN_LANDMARKS = gql`
+	query GetChildrenLandmarks($_id:String!){
+		getChildrenLandmarks(_id:$_id)
+	}
+`;

@@ -30,6 +30,7 @@ const typeDefs = gql`
         getMapById(_id: String!): Map
         getRegionById(_id: String!): Region
         getPath(_id: String!):[parentEntry]
+        getChildrenLandmarks(_id:String!):[String]
     }
 
     extend type Mutation{
@@ -42,8 +43,8 @@ const typeDefs = gql`
         updateRegionField(_id: String!, parentId:String!, field: String!, value: String!): String
         sortRegions(regionId: String!, field: String!, isMap:Boolean!): String
         unsortRegions(regionId:String! prevSubregions:[RegionInput]!, isMap:Boolean!): String
-        addLandmark(_id:String!, landmark: String!, parentId:String!): String
-        deleteLandmark(_id:String!, landmark:String!, parentId:String!): String
+        addLandmark(_id:String!, landmark: String!, parentId:String!, index:Int): String
+        deleteLandmark(_id:String!, landmark:String!, parentId:String!): Int
         changeParentRegion(newParentId: String!, oldParentId:String!, regionId:String!): String
     }
 

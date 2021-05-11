@@ -1,10 +1,11 @@
 import {useParams} from 'react-router-dom';
-import {GET_REGION_BY_ID, GET_PATH} from '../../cache/queries';
+import {GET_REGION_BY_ID, GET_PATH, GET_CHILDREN_LANDMARKS} from '../../cache/queries';
 import {useQuery} from '@apollo/client'
 import {WRow, WButton, WInput} from 'wt-frontend';
 import {useHistory} from 'react-router-dom';
 import {useState} from 'react';
 import LandmarkEntry from './LandmarkEntry';
+
 const RegionViewer = (props) => {
     const undoColor = props.undoable? "white":"gray";
     const redoColor = props.redoable? "white":"gray";
@@ -19,7 +20,8 @@ const RegionViewer = (props) => {
 
     const{loading,data, refetch} = useQuery(GET_REGION_BY_ID, {variables:{_id:id}});
     const{data:dataP} = useQuery(GET_PATH, {variables:{_id:id}});
-
+    const{data:dataL} = useQuery(GET_CHILDREN_LANDMARKS, {variables:{_id:id}});
+    
     if(dataP){
         props.setParentRegions(dataP.getPath);
     }
@@ -27,8 +29,26 @@ const RegionViewer = (props) => {
     if(loading) return null;
     if(data){
         region = data.getRegionById;
-        landmarks=region.landmarks;
+        //landmarks=region.landmarks;
+        
+        let landmarkElements = data.getRegionById.landmarks;
+        for(let i=0;i<landmarkElements.length;i++){
+            landmarks.push({name:landmarkElements[i], owned:true});
+        }
+        
     }
+   
+    
+    if(dataL) {
+        let landmarkElements = dataL.getChildrenLandmarks;
+        
+        for(let i=0;i<landmarkElements.length;i++){
+            landmarks.push({name:landmarkElements[i], owned:false});
+        }
+        
+    }
+    
+    
 
     const handleNavigate = () => {
         const parent = props.parentRegions[props.parentRegions.length-1];
@@ -56,6 +76,11 @@ const RegionViewer = (props) => {
 
     const handleRedo = async () => {
         await props.tpsRedo();
+        await refetch();
+    }
+
+    const handleDeleteLandmark = async (landmark) => {
+        await props.deleteLandmark(id, landmark, region.parentRegionId);
         await refetch();
     }
 
@@ -92,6 +117,7 @@ const RegionViewer = (props) => {
                     {
                         landmarks.map(landmark => (<LandmarkEntry
                             landmark={landmark}
+                            handleDeleteLandmark={handleDeleteLandmark}
                             key={landmarks.indexOf(landmark)}
                         />))
                     }

@@ -54,6 +54,26 @@ module.exports = {
 			
 			return path;
 			
+		},
+
+		getChildrenLandmarks:async (_, args) => {
+			const{_id} = args;
+			const regionId = new ObjectId(_id);
+			let found = await Region.findOne({_id:regionId});
+			let subregionQueue=found.subregions;
+			let currentSubregion;
+			let landmarks=[];
+			
+			while(subregionQueue.length>0){
+				currentSubregion=subregionQueue.shift();
+				found=await Region.findOne({_id:currentSubregion._id});
+				
+				for(let i=0;i<found.landmarks.length;i++){
+					landmarks.push(found.landmarks[i]+" - "+found.name);
+				}
+				subregionQueue=[...subregionQueue, ...found.subregions];
+			}
+			return landmarks;
 		}
     },
 
@@ -321,7 +341,7 @@ module.exports = {
 		},
 
 		addLandmark: async (_, args) => {
-			const {landmark, _id, parentId} = args;
+			const {landmark, _id, parentId, index} = args;
 			const regionId = new ObjectId(_id);
 			const parentRegionId = new ObjectId(parentId);
 			const found = await Region.findOne({_id:regionId});
@@ -329,12 +349,16 @@ module.exports = {
 			const repeat = landmarks.find(landmarkE => landmarkE==landmark);
 			if(repeat) return ("Landmark with this name already exists");
 			
-			landmarks.push(landmark);
+			if(index)
+				landmarks.splice(index,0,landmark);
+			else
+				landmarks.push(landmark);
+		
 			const updated = await Region.updateOne({_id:regionId}, {landmarks:landmarks});
 			
 			let parentFound = await Map.findOne({_id:parentRegionId});
 			if(!parentFound){
-				parentFound = await Region.findByIdAndRemove({_id:parentRegionId});
+				parentFound = await Region.findOne({_id:parentRegionId});
 			}
 			const subregions = parentFound.subregions;
 			const subregion = subregions.find(subregion => subregion._id==_id);
@@ -349,6 +373,7 @@ module.exports = {
 			}
 			if(updated) return ("Landmark is added");
 			else return ("Landmark is not added");
+			
 		},
 
 		deleteLandmark: async (_, args) => {
@@ -389,8 +414,8 @@ module.exports = {
 				await Region.updateOne({_id:parentRegionId}, {subregions:subregions});
 			}
 			
-			if(updated) return ("landmark is deleted");
-			else return ("landmark is not deleted");
+			if(updated) return index;
+			else return -1;
 		}
 
 		/*

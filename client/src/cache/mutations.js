@@ -88,8 +88,8 @@ export const UNSORT_REGIONS = gql`
 `;
 
 export const ADD_LANDMARK = gql`
-	mutation AddLandmark($_id:String!, $landmark:String!, $parentId:String!){
-		addLandmark(_id:$_id, landmark:$landmark, parentId:$parentId)
+	mutation AddLandmark($_id:String!, $landmark:String!, $parentId:String!, $index:Int){
+		addLandmark(_id:$_id, landmark:$landmark, parentId:$parentId, index:$index)
 	}
 `;
 
