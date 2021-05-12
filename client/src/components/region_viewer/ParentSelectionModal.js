@@ -37,7 +37,8 @@ const ParentSelectionModal = (props) => {
                                                         toggleShowSelection={props.toggleShowSelection}
                                                         refetchRegion={props.refetchRegion}
                                                         refetchPath={props.refetchPath}
-                                                        refetchMaps={props.refetchMaps}
+                                                        refetchNext={props.refetchNext}
+                                                        refetchPrev={props.refetchPrev}
                                                     />))
                 }
             </WMMain>
@@ -51,6 +52,8 @@ const ParentSiblingEntry = (props) => {
         await props.changeParentRegion(props.region._id, props.region.parentRegionId, props.sibling._id, props.isParentMap);
         await props.refetchRegion();
         await props.refetchPath();
+        await props.refetchPrev();
+        await props.refetchNext();
     }
     
     return(props.sibling._id==props.region.parentRegionId? null:

@@ -93,12 +93,16 @@ const RegionViewer = (props) => {
         await props.tpsUndo();
         await refetch();
         await refetchP();
+        await refetchNext();
+        await refetchPrev();
     }
 
     const handleRedo = async () => {
         await props.tpsRedo();
         await refetch();
         await refetchP();
+        await refetchNext();
+        await refetchPrev();
     }
 
     const handleDeleteLandmark = async (landmark) => {
@@ -165,6 +169,8 @@ const RegionViewer = (props) => {
                                     refetchRegion={refetch}
                                     refetchPath={refetchP}
                                     refetchMaps={props.refetchMaps}
+                                    refetchNext={refetchNext}
+                                    refetchPrev={refetchPrev}
                                 />)
             }
         </div>
