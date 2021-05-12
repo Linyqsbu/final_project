@@ -62,21 +62,21 @@ const RegionEntry = (props) => {
                 </WCol>
                 <WCol style={{cursor:"pointer"}} className="region-entry" onDoubleClick = {handleNavigate} size="2">
                     {editName?
-                        <WInput autoFocus={true} onBlur={handleNameEdit} defaultValue={props.subregion.name} type="texted"/>:
+                        <WInput style={{color:"black"}} autoFocus={true} onBlur={handleNameEdit} defaultValue={props.subregion.name} type="texted"/>:
                         <div onClick={() => {toggleEditName(true)}}>{props.subregion.name}</div>
                     }
                 </WCol>
                 
                 <WCol className="region-entry" size="2">
                     {editCapital?
-                        <WInput autoFocus={true} onBlur={handleCapitalEdit} defaultValue={props.subregion.capital} type="texted"/>:
+                        <WInput style={{color:"black"}} autoFocus={true} onBlur={handleCapitalEdit} defaultValue={props.subregion.capital} type="texted"/>:
                         <div onClick={() => {toggleEditCapital(true)}}>{props.subregion.capital}</div>
                     }
                 </WCol>
                 
                 <WCol className="region-entry" size="2">
                     {editLeader?
-                        <WInput autoFocus={true} onBlur={handleLeaderEdit} defaultValue={props.subregion.leader} type="texted"/>:
+                        <WInput style={{color:"black"}} autoFocus={true} onBlur={handleLeaderEdit} defaultValue={props.subregion.leader} type="texted"/>:
                         <div onClick={() => {toggleEditLeader(true)}}>{props.subregion.leader}</div>
                     }
                 </WCol>

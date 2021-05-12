@@ -7,7 +7,8 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { WNavbar, WLayout, WNavItem, WModal, WMHeader, WMFooter, WButton } 	from 'wt-frontend';
 import NavbarOptions from './components/navbar/NavbarOptions';
 import Logo from './components/navbar/Logo'
-import PathContainer from './components/navbar/PathContainer'
+import PathContainer from './components/navbar/PathContainer';
+import Arrows from './components/navbar/Arrows';
 import Welcome from './components/welcome/Welcome';
 import CreateAccountScreen from './components/account_screen/CreateAccountScreen';
 import MapSelectionScreen from './components/map_selection_screen/MapSelectionScreen';
@@ -40,12 +41,15 @@ const Screen = (props) => {
   const[UnsortRegions] = useMutation(mutations.UNSORT_REGIONS);
   const[AddLandmark] = useMutation(mutations.ADD_LANDMARK);
   const[DeleteLandmark] = useMutation(mutations.DELETE_LANDMARK);
+
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
   const[parentRegions, setParentRegions] = useState([]);
   const[redoable, setRedoable]=useState(false);
   const[undoable, setUndoable]=useState(false);
-
+  const[showArrows, toggleShowArrows]=useState(false);//show arrows to navigate to sibling regions
+  const[prevSibling, setPrevSibling]=useState('');//_id of the previous sibling in the region viewer
+  const[nextSibling, setNextSibling]=useState('');//_id of the next sibling in the region viewer
   
   let maps=[];
   const {loading:loadingM, error: errorM, data: dataM, refetch: fetchMaps} = useQuery(queries.GET_DB_MAPS);
@@ -59,7 +63,7 @@ const Screen = (props) => {
 
 
   const refetchMaps = async (refetch) => {
-    const {loading, error, data} = await refetch();
+    const {data} = await refetch();
     if(data){maps=data.getAllMaps;}
   }
 
@@ -172,13 +176,18 @@ const Screen = (props) => {
             </WNavItem>
           </ul>
           <ul>
-            <WNavItem className="parent-entry" style={{left:"10%", overflowX:"auto", width:"50%"}}>
+            <WNavItem className="parent-entry" style={{left:"10%", overflowX:"auto", width:"35%"}}>
               <PathContainer
                 path={path}
                 parentRegions={parentRegions}
                 setParentRegions={setParentRegions}
               />
             </WNavItem>
+          </ul>
+          <ul>
+            {
+              showArrows&&(<Arrows prevSibling={prevSibling} nextSibling={nextSibling} />)
+            }
           </ul>
           <ul>
               <NavbarOptions setParentRegions={setParentRegions} fetchUser={props.refetchUser} user={props.user} auth = {props.user===null? false: true}/>
@@ -253,6 +262,9 @@ const Screen = (props) => {
               deleteLandmark={deleteLandmark}
               tpsUndo={tpsUndo}
               tpsRedo={tpsRedo}
+              toggleShowArrows={toggleShowArrows}
+              setPrevSibling={setPrevSibling}
+              setNextSibling={setNextSibling}
             />
           </Route>
 
@@ -280,6 +292,4 @@ const Screen = (props) => {
   );
 
 }
-
-
 export default Screen;

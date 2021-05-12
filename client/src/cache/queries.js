@@ -87,3 +87,9 @@ export const GET_CHILDREN_LANDMARKS = gql`
 		getChildrenLandmarks(_id:$_id)
 	}
 `;
+
+export const GET_SIBLING = gql`
+	query GetSibling($_id:String!, $direction:Int!){
+		getSibling(_id:$_id, direction:$direction)
+	}
+`;

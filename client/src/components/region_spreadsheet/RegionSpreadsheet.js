@@ -22,9 +22,7 @@ const RegionSpreadsheet = (props) => {
     const{loading:loadingM, data:dataM, refetch:refetchM} = useQuery(GET_MAP_BY_ID, {variables:{_id:id}});
     const{loading:loadingR, data:dataR, refetch:refetchR} = useQuery(GET_REGION_BY_ID, {variables:{_id:id}});
     const{data:dataP, refetch:refetchP} = useQuery(GET_PATH, {variables:{_id:id}});
-    if(dataP){
-        props.setParentRegions(dataP.getPath);
-    }
+    
 
     if(loadingM || loadingR) {console.log("loading");}
     
@@ -40,6 +38,17 @@ const RegionSpreadsheet = (props) => {
 
     let redoButtonColor=props.redoable? "white":"gray";
     let undoButtonColor=props.undoable? "white":"gray";
+
+    useEffect(() => {
+        //let isMounted = true;
+        if(dataP){
+            props.setParentRegions(dataP.getPath);
+        }
+        return (() => {
+            //isMounted=false;
+            props.setParentRegions([]);
+        });
+    })
     
       
     const refetchRegion = async () =>{

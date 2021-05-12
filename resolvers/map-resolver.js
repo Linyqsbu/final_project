@@ -74,6 +74,33 @@ module.exports = {
 				subregionQueue=[...subregionQueue, ...found.subregions];
 			}
 			return landmarks;
+		},
+
+		getSibling: async (_, args) => {
+			const{_id, direction} = args;
+			const regionId = new ObjectId(_id);
+			const found = await Region.findOne({_id:regionId});
+			let parentFound = await Map.findOne({_id:found.parentRegionId});
+			if(!parentFound){
+				parentFound = await Region.findOne({_id:found.parentRegionId});
+			}
+			
+			let index=0;
+			for(let i=0;i<parentFound.subregions.length;i++){
+				if(parentFound.subregions[i]._id == _id){
+					index=i;
+					break;
+				}
+			}
+
+			index = index+direction;
+			if(index>=0 && index<parentFound.subregions.length){
+				return parentFound.subregions[index]._id;
+			}
+			else{
+				return ("invalid id");
+			}
+			
 		}
     },
 

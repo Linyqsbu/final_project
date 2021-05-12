@@ -1,9 +1,9 @@
 import {useParams} from 'react-router-dom';
-import {GET_REGION_BY_ID, GET_PATH, GET_CHILDREN_LANDMARKS} from '../../cache/queries';
+import {GET_REGION_BY_ID, GET_PATH, GET_CHILDREN_LANDMARKS, GET_SIBLING} from '../../cache/queries';
 import {useQuery} from '@apollo/client'
 import {WRow, WButton, WInput} from 'wt-frontend';
 import {useHistory} from 'react-router-dom';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import LandmarkEntry from './LandmarkEntry';
 
 const RegionViewer = (props) => {
@@ -14,19 +14,49 @@ const RegionViewer = (props) => {
     const history = useHistory();
 
     const[landmarkInput, setLandmarkInput] = useState('');
+
+    
+    
     
     let region = {};
     let landmarks = [];
 
     const{loading,data, refetch} = useQuery(GET_REGION_BY_ID, {variables:{_id:id}});
-    const{data:dataP} = useQuery(GET_PATH, {variables:{_id:id}});
+    const{data:dataP, refetch:refetchP} = useQuery(GET_PATH, {variables:{_id:id}});
     const{data:dataL} = useQuery(GET_CHILDREN_LANDMARKS, {variables:{_id:id}});
+    const{data:dataPrevSib} = useQuery(GET_SIBLING, {variables:{_id:id, direction:-1}});
+    const{data:dataNextSib} = useQuery(GET_SIBLING, {variables:{_id:id, direction:1}});
     
-    if(dataP){
-        props.setParentRegions(dataP.getPath);
+    useEffect(() =>{
+        props.toggleShowArrows(true);
+        if(dataP){
+            props.setParentRegions(dataP.getPath);
+        }
+
+        if(dataPrevSib){
+            props.setPrevSibling(dataPrevSib.getSibling);
+        }
+
+        if(dataNextSib){
+            props.setNextSibling(dataNextSib.getSibling);
+        }
+
+        return(() => {
+            props.toggleShowArrows(false);
+            props.setParentRegions([]);
+            props.setPrevSibling('');
+            props.setNextSibling('');
+        });
+    })
+    
+    if(dataL) {
+        let landmarkElements = dataL.getChildrenLandmarks;        
+        for(let i=0;i<landmarkElements.length;i++){
+            landmarks.push({name:landmarkElements[i], owned:false});
+        }
+        
     }
-    
-    if(loading) return null;
+
     if(data){
         region = data.getRegionById;
         //landmarks=region.landmarks;
@@ -35,21 +65,8 @@ const RegionViewer = (props) => {
         for(let i=0;i<landmarkElements.length;i++){
             landmarks.push({name:landmarkElements[i], owned:true});
         }
-        
-    }
-   
-    
-    if(dataL) {
-        let landmarkElements = dataL.getChildrenLandmarks;
-        
-        for(let i=0;i<landmarkElements.length;i++){
-            landmarks.push({name:landmarkElements[i], owned:false});
-        }
-        
     }
     
-    
-
     const handleNavigate = () => {
         const parent = props.parentRegions[props.parentRegions.length-1];
         const newParentRegions = props.parentRegions.slice(0,props.parentRegions.length-1);
@@ -84,6 +101,7 @@ const RegionViewer = (props) => {
         await refetch();
     }
 
+    if(loading) return null;
     return(
         <div className="region-viewer">
             
