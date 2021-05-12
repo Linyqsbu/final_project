@@ -153,7 +153,12 @@ module.exports = {
 		addRegion: async(_, args) => {
 			const{region, _id, isMap} = args;
 			const parentId = new ObjectId(_id);
-			const regionId = new ObjectId();
+
+			let regionId;
+			if(region._id=='')
+				regionId = new ObjectId();
+			else
+				regionId = new ObjectId(_id);
 
 			const newRegion = new Region({
 				_id: regionId,
@@ -209,6 +214,11 @@ module.exports = {
 			}
 			
 			subregions[index][field]=value;
+
+			if(field=="name"){
+				subregions[index].flag=value+' Flag';
+				await Region.updateOne({id:regionId}, {flag:value+' Flag'});
+			}
 			
 			const isMap = await Map.findOne({_id:parentRegionId});
 			if(!isMap){
@@ -218,6 +228,8 @@ module.exports = {
 				await Map.updateOne({_id:parentRegionId}, {subregions:subregions});
 			}
 			const updated = await Region.updateOne({_id:regionId}, {[field]:value});
+
+			
 			if(updated) return ('updated successfully');
 			else return ('updated unsuccessfully');
 		},
@@ -443,6 +455,48 @@ module.exports = {
 			
 			if(updated) return index;
 			else return -1;
+		},
+
+		changeParentRegion: async (_, args) => {
+			const {_id, oldParentId, newParentId, isParentMap} = args;
+
+			const regionId = new ObjectId(_id);
+			const newParent = new ObjectId(newParentId);
+			const oldParent = new ObjectId(oldParentId);
+
+			const updated = await Region.updateOne({_id:regionId}, {parentRegionId:newParent});
+
+			let oldParentFound;
+			let newParentFound;
+			if(isParentMap){
+				oldParentFound = await Map.findOne({_id:oldParent});
+				newParentFound = await Map.findOne({_id:newParent});
+			}
+			else{
+				oldParentFound = await Region.findOne({_id:oldParent});
+				newParentFound = await Region.findOne({_id:newParent});
+			}
+
+			const oldSubregions = oldParentFound.subregions;
+			const newSubregions = newParentFound.subregions;
+			const index = oldSubregions.findIndex(subregion => subregion._id==_id);
+			const region = oldSubregions[index];
+			oldSubregions.splice(index,1);
+			newSubregions.push(region);
+			
+			if(isParentMap){
+				await Map.updateOne({_id:oldParent}, {subregions:oldSubregions});
+				await Map.updateOne({_id:newParent}, {subregions:newSubregions});
+			}
+			else{
+				await Region.updateOne({_id:oldParent}, {subregions:oldSubregions});
+				await Region.updateOne({_id:newParent}, {subregions:newSubregions});
+			}
+			
+
+			if(updated) return ("The region is updated");
+			else return ("The region is not updated");
+			
 		}
 
 		/*

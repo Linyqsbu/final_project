@@ -46,7 +46,7 @@ const typeDefs = gql`
         unsortRegions(regionId:String! prevSubregions:[RegionInput]!, isMap:Boolean!): String
         addLandmark(_id:String!, landmark: String!, parentId:String!, index:Int): String
         deleteLandmark(_id:String!, landmark:String!, parentId:String!): Int
-        changeParentRegion(newParentId: String!, oldParentId:String!, regionId:String!): String
+        changeParentRegion(_id:String!, oldParentId:String!, newParentId:String!, isParentMap:Boolean!): String
     }
 
     

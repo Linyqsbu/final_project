@@ -5,6 +5,7 @@ import {WRow, WButton, WInput} from 'wt-frontend';
 import {useHistory} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import LandmarkEntry from './LandmarkEntry';
+import ParentSelectionModal from './ParentSelectionModal';
 
 const RegionViewer = (props) => {
     const undoColor = props.undoable? "white":"gray";
@@ -14,7 +15,7 @@ const RegionViewer = (props) => {
     const history = useHistory();
 
     const[landmarkInput, setLandmarkInput] = useState('');
-
+    const[showSelection, toggleShowSelection] = useState(false);
     
     
     
@@ -22,7 +23,7 @@ const RegionViewer = (props) => {
     let landmarks = [];
 
     const{loading,data, refetch} = useQuery(GET_REGION_BY_ID, {variables:{_id:id}});
-    const{data:dataP} = useQuery(GET_PATH, {variables:{_id:id}, fetchPolicy:"no-cache"});
+    const{data:dataP, refetch:refetchP} = useQuery(GET_PATH, {variables:{_id:id}, fetchPolicy:"no-cache"});
     const{data:dataL} = useQuery(GET_CHILDREN_LANDMARKS, {variables:{_id:id}, fetchPolicy:"no-cache"});
     const{data:dataPrevSib} = useQuery(GET_SIBLING, {variables:{_id:id, direction:-1}});
     const{data:dataNextSib} = useQuery(GET_SIBLING, {variables:{_id:id, direction:1}});
@@ -120,7 +121,7 @@ const RegionViewer = (props) => {
             </WRow>
             <WRow style={{paddingLeft:"15px", paddingBottom:"20px"}}>
                 <span>Parent Region:</span> <span onClick={handleNavigate} style={{color:"skyblue", cursor:"pointer"}}>{props.parentRegions.length?props.parentRegions[props.parentRegions.length-1].name:null}</span>
-                <span><i style={{cursor:"pointer", fontSize:"20px", color:"white"}} className="material-icons">edit</i></span>
+                <span><i onClick={() => {toggleShowSelection(true)}} style={{cursor:"pointer", fontSize:"20px", color:"white"}} className="material-icons">edit</i></span>
             </WRow>
             <WRow style={{paddingLeft:"15px", paddingBottom:"20px"}}>
                 <span>Regional Capital:</span> {region.capital}
@@ -152,7 +153,18 @@ const RegionViewer = (props) => {
                     <WInput onBlur={updateLandmarkInput} style={{height:"100%", backgroundColor:"white", color:"black", width:"300px"}}/>
                 </div>
             </div>
-            
+            {
+                showSelection&&(<ParentSelectionModal 
+                                    toggleShowSelection={toggleShowSelection} 
+                                    parentId={region.parentRegionId}
+                                    maps={props.maps}
+                                    region={region}
+                                    changeParentRegion={props.changeParentRegion}
+                                    refetchRegion={refetch}
+                                    refetchPath={refetchP}
+                                    refetchMaps={props.refetchMaps}
+                                />)
+            }
         </div>
     );
 };

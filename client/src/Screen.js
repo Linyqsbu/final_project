@@ -41,7 +41,8 @@ const Screen = (props) => {
   const[UnsortRegions] = useMutation(mutations.UNSORT_REGIONS);
   const[AddLandmark] = useMutation(mutations.ADD_LANDMARK);
   const[DeleteLandmark] = useMutation(mutations.DELETE_LANDMARK);
-
+  const[ChangeParentRegion] = useMutation(mutations.CHANGE_PARENT_REGION);
+  
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
   const[parentRegions, setParentRegions] = useState([]);
@@ -160,6 +161,11 @@ const Screen = (props) => {
     await tpsRedo();
   }
 
+  const changeParentRegion = async (_id, oldParentId, newParentId, isParentMap) => {
+    await ChangeParentRegion({variables:{_id:_id, oldParentId:oldParentId, newParentId:newParentId, isParentMap:isParentMap}});
+    await refetchMaps(fetchMaps);
+  }
+
   return(
     <WLayout wLayout="header">
       <BrowserRouter>
@@ -253,6 +259,7 @@ const Screen = (props) => {
           <Route path = "/region_viewer/:id">
             <RegionViewer
               maps={maps}
+              refetchMaps={fetchMaps}
               parentRegions={parentRegions}
               setParentRegions={setParentRegions}
               tps={props.tps}
@@ -265,6 +272,7 @@ const Screen = (props) => {
               toggleShowArrows={toggleShowArrows}
               setPrevSibling={setPrevSibling}
               setNextSibling={setNextSibling}
+              changeParentRegion={changeParentRegion}
             />
           </Route>
 
