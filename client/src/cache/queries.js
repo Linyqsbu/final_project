@@ -93,3 +93,15 @@ export const GET_SIBLING = gql`
 		getSibling(_id:$_id, direction:$direction)
 	}
 `;
+
+export const GET_ALL_SIBLINGS = gql`
+	query GetAllSiblings($_id:String!){
+		getAllSiblings(_id:$_id){
+			_id
+			name
+			capital
+			leader
+			landmarks
+		}
+	}
+`;

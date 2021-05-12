@@ -25,8 +25,8 @@ const RegionViewer = (props) => {
     const{loading,data, refetch} = useQuery(GET_REGION_BY_ID, {variables:{_id:id}});
     const{data:dataP, refetch:refetchP} = useQuery(GET_PATH, {variables:{_id:id}, fetchPolicy:"no-cache"});
     const{data:dataL} = useQuery(GET_CHILDREN_LANDMARKS, {variables:{_id:id}, fetchPolicy:"no-cache"});
-    const{data:dataPrevSib} = useQuery(GET_SIBLING, {variables:{_id:id, direction:-1}});
-    const{data:dataNextSib} = useQuery(GET_SIBLING, {variables:{_id:id, direction:1}});
+    const{data:dataPrevSib, refetch:refetchPrev} = useQuery(GET_SIBLING, {variables:{_id:id, direction:-1}});
+    const{data:dataNextSib, refetch:refetchNext} = useQuery(GET_SIBLING, {variables:{_id:id, direction:1}});
     
     useEffect(() =>{
         props.toggleShowArrows(true);
@@ -92,11 +92,13 @@ const RegionViewer = (props) => {
     const handleUndo = async () => {
         await props.tpsUndo();
         await refetch();
+        await refetchP();
     }
 
     const handleRedo = async () => {
         await props.tpsRedo();
         await refetch();
+        await refetchP();
     }
 
     const handleDeleteLandmark = async (landmark) => {

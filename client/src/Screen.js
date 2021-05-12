@@ -24,6 +24,7 @@ import {UpdateRegion_Transaction,
         SortRegions_Transaction,
         AddLandmark_Transaction,
         DeleteRegion_Transaction,
+        ChangeParent_Transaction,
         DeleteLandmark_Transaction} from './utils/jsTPS';
 
 
@@ -72,12 +73,14 @@ const Screen = (props) => {
     await props.tps.doTransaction();
     setRedoable(props.tps.hasTransactionToRedo());
     setUndoable(props.tps.hasTransactionToUndo());
+    await refetchMaps(fetchMaps);
   }
 
   const tpsUndo = async () => {
     await props.tps.undoTransaction();
     setRedoable(props.tps.hasTransactionToRedo());
     setUndoable(props.tps.hasTransactionToUndo());
+    await refetchMaps(fetchMaps);
   }
 
   const createNewMap = async (name) => {
@@ -162,8 +165,10 @@ const Screen = (props) => {
   }
 
   const changeParentRegion = async (_id, oldParentId, newParentId, isParentMap) => {
-    await ChangeParentRegion({variables:{_id:_id, oldParentId:oldParentId, newParentId:newParentId, isParentMap:isParentMap}});
-    await refetchMaps(fetchMaps);
+    let transaction = new ChangeParent_Transaction(_id, oldParentId, newParentId,isParentMap, ChangeParentRegion);
+    props.tps.addTransaction(transaction);
+    await tpsRedo();
+    
   }
 
   return(

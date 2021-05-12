@@ -1,11 +1,21 @@
 import {WModal, WMHeader, WMMain, WButton} from 'wt-frontend';
+import {useQuery} from '@apollo/client';
+import {GET_ALL_SIBLINGS} from '../../cache/queries';
 const ParentSelectionModal = (props) => {
     const map = props.maps.find(map => map._id==props.parentId);
     const isParentMap = map!==undefined;
     let parentSiblings=[];
 
+    const {data} = useQuery(GET_ALL_SIBLINGS, {variables:{_id:props.region.parentRegionId}, fetchPolicy:"no-cache", skip:isParentMap});
+
     if(isParentMap){
         parentSiblings=props.maps;
+    }
+    
+    else{
+        if(data){
+            parentSiblings=data.getAllSiblings;
+        }
     }
 
     return(
@@ -41,7 +51,6 @@ const ParentSiblingEntry = (props) => {
         await props.changeParentRegion(props.region._id, props.region.parentRegionId, props.sibling._id, props.isParentMap);
         await props.refetchRegion();
         await props.refetchPath();
-        await props.refetchMaps();
     }
     
     return(props.sibling._id==props.region.parentRegionId? null:

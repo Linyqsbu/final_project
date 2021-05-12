@@ -32,6 +32,7 @@ const typeDefs = gql`
         getPath(_id: String!):[parentEntry]
         getChildrenLandmarks(_id:String!):[String]
         getSibling(_id:String!, direction:Int!): String
+        getAllSiblings(_id:String!):[Region]
     }
 
     extend type Mutation{

@@ -140,7 +140,24 @@ export class DeleteLandmark_Transaction extends jsTPS_Transaction{
     }
 }
 
+export class ChangeParent_Transaction extends jsTPS_Transaction{
+    constructor(regionId, oldParentId, newParentId, isParentMap, changeFunction){
+        super();
+        this.regionId=regionId;
+        this.oldParentId=oldParentId;
+        this.newParentId=newParentId;
+        this.changeFunction=changeFunction;
+        this.isParentMap=isParentMap;//is the parent a map?
+    }
 
+    async doTransaction(){
+        await this.changeFunction({variables:{_id:this.regionId, oldParentId:this.oldParentId, newParentId:this.newParentId, isParentMap:this.isParentMap}});
+    }
+
+    async undoTransaction(){
+        await this.changeFunction({variables:{_id:this.regionId, oldParentId:this.newParentId, newParentId:this.oldParentId, isParentMap:this.isParentMap}});
+    }
+}
 
 
 

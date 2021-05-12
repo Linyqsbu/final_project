@@ -75,7 +75,10 @@ module.exports = {
 			}
 			return landmarks;
 		},
-
+		
+		/*
+			This method is to get the previous or next sibling or region with _id
+		*/
 		getSibling: async (_, args) => {
 			const{_id, direction} = args;
 			const regionId = new ObjectId(_id);
@@ -101,6 +104,20 @@ module.exports = {
 				return ("invalid id");
 			}
 			
+		},
+
+		getAllSiblings: async(_, args) => {
+			const {_id} = args;
+			const regionId = new ObjectId(_id);
+			const found = await Region.findOne({_id:regionId});
+			let parentFound = await Map.findOne({_id:found.parentRegionId});
+			if(!parentFound){
+				parentFound = await Region.findOne({_id:found.parentRegionId});
+			}
+			let siblings=[]
+			siblings=parentFound.subregions;
+			console.log(parentFound);
+			return siblings;
 		}
     },
 
