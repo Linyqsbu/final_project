@@ -48,7 +48,7 @@ const RegionViewer = (props) => {
             props.setNextSibling('');
         });
     })
-    
+
     if(data){
         region = data.getRegionById;
         //landmarks=region.landmarks;
@@ -120,6 +120,7 @@ const RegionViewer = (props) => {
             </WRow>
             <WRow style={{paddingLeft:"15px", paddingBottom:"20px"}}>
                 <span>Parent Region:</span> <span onClick={handleNavigate} style={{color:"skyblue", cursor:"pointer"}}>{props.parentRegions.length?props.parentRegions[props.parentRegions.length-1].name:null}</span>
+                <span><i style={{cursor:"pointer", fontSize:"20px", color:"white"}} className="material-icons">edit</i></span>
             </WRow>
             <WRow style={{paddingLeft:"15px", paddingBottom:"20px"}}>
                 <span>Regional Capital:</span> {region.capital}
