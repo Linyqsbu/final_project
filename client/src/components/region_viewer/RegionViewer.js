@@ -22,8 +22,8 @@ const RegionViewer = (props) => {
     let landmarks = [];
 
     const{loading,data, refetch} = useQuery(GET_REGION_BY_ID, {variables:{_id:id}});
-    const{data:dataP, refetch:refetchP} = useQuery(GET_PATH, {variables:{_id:id}});
-    const{data:dataL} = useQuery(GET_CHILDREN_LANDMARKS, {variables:{_id:id}});
+    const{data:dataP} = useQuery(GET_PATH, {variables:{_id:id}, fetchPolicy:"no-cache"});
+    const{data:dataL} = useQuery(GET_CHILDREN_LANDMARKS, {variables:{_id:id}, fetchPolicy:"no-cache"});
     const{data:dataPrevSib} = useQuery(GET_SIBLING, {variables:{_id:id, direction:-1}});
     const{data:dataNextSib} = useQuery(GET_SIBLING, {variables:{_id:id, direction:1}});
     
@@ -49,14 +49,6 @@ const RegionViewer = (props) => {
         });
     })
     
-    if(dataL) {
-        let landmarkElements = dataL.getChildrenLandmarks;        
-        for(let i=0;i<landmarkElements.length;i++){
-            landmarks.push({name:landmarkElements[i], owned:false});
-        }
-        
-    }
-
     if(data){
         region = data.getRegionById;
         //landmarks=region.landmarks;
@@ -66,6 +58,16 @@ const RegionViewer = (props) => {
             landmarks.push({name:landmarkElements[i], owned:true});
         }
     }
+    
+    if(dataL) {
+        let landmarkElements = dataL.getChildrenLandmarks;        
+        for(let i=0;i<landmarkElements.length;i++){
+            landmarks.push({name:landmarkElements[i], owned:false});
+        }
+        
+    }
+
+    
     
     const handleNavigate = () => {
         const parent = props.parentRegions[props.parentRegions.length-1];

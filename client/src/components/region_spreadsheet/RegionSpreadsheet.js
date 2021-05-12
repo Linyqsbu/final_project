@@ -21,7 +21,7 @@ const RegionSpreadsheet = (props) => {
 
     const{loading:loadingM, data:dataM, refetch:refetchM} = useQuery(GET_MAP_BY_ID, {variables:{_id:id}});
     const{loading:loadingR, data:dataR, refetch:refetchR} = useQuery(GET_REGION_BY_ID, {variables:{_id:id}});
-    const{data:dataP, refetch:refetchP} = useQuery(GET_PATH, {variables:{_id:id}});
+    const{data:dataP, refetch:refetchP} = useQuery(GET_PATH, {variables:{_id:id}, fetchPolicy:"no-cache"});
     
 
     if(loadingM || loadingR) {console.log("loading");}
