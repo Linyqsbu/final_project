@@ -11,6 +11,14 @@ const RegionEntry = (props) => {
     const[editName, toggleEditName] = useState(false);
     const[showDelete, toggleShowDelete] = useState(false);
 
+    let flag='';
+    try{
+        flag=require('../../flags/'+props.subregion.flag+'.png').default;
+    }
+    catch(error){
+        flag=null;
+    }
+
     const handleNavigate = () => {
         props.setRedoable(false);
         props.setUndoable(false);
@@ -81,7 +89,7 @@ const RegionEntry = (props) => {
                     }
                 </WCol>
                 <WCol className="region-entry" size="2">
-                    <div>{props.subregion.flag}</div>
+                    <img style={{height:"35px"}} src={flag} alt={props.subregion.flag}/>
                 </WCol>
                 <WCol className="region-entry" size="3">
                     <div>{props.subregion.landmarks.length? props.subregion.landmarks[0]+". . .":null}</div>
