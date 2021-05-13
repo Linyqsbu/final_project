@@ -16,8 +16,7 @@ const RegionViewer = (props) => {
 
     const[landmarkInput, setLandmarkInput] = useState('');
     const[showSelection, toggleShowSelection] = useState(false);
-    
-    
+
     
     let region = {};
     let landmarks = [];
@@ -50,10 +49,19 @@ const RegionViewer = (props) => {
         });
     })
 
+    let flag='';
     if(data){
         region = data.getRegionById;
         //landmarks=region.landmarks;
         
+        try{
+            flag=require('../../flags/'+region.flag+'.png').default;
+        }
+        catch(error){
+            flag=null;
+        }
+
+
         let landmarkElements = data.getRegionById.landmarks;
         for(let i=0;i<landmarkElements.length;i++){
             landmarks.push({name:landmarkElements[i], owned:true});
@@ -121,7 +129,8 @@ const RegionViewer = (props) => {
                 <i className="material-icons region-spreadsheet-button">
                     redo</i>          
             </WButton>
-            <div style={{height:"60%"}}/>
+            <div style={{height:"60%"}}><img src={flag} alt=''/></div>
+
             <WRow style={{paddingLeft:"15px", paddingBottom:"20px"}}>
                 <span>Region Name:</span> {region.name}
             </WRow>

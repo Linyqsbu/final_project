@@ -2,13 +2,13 @@ import {WRow, WCol, WInput, WButton, WModal, WMHeader, WMFooter} from 'wt-fronte
 import {useHistory} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
 import {GET_PATH} from '../../cache/queries';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 const RegionEntry = (props) => {
     const history = useHistory();
 
-    const[editCapital, toggleEditCapital] = useState(false);
-    const[editLeader, toggleEditLeader] = useState(false);
-    const[editName, toggleEditName] = useState(false);
+    //const[editCapital, toggleEditCapital] = useState(false);
+    //const[editLeader, toggleEditLeader] = useState(false);
+    //const[editName, toggleEditName] = useState(false);
     const[showDelete, toggleShowDelete] = useState(false);
 
     let flag='';
@@ -18,6 +18,8 @@ const RegionEntry = (props) => {
     catch(error){
         flag=null;
     }
+    
+    
 
     const handleNavigate = () => {
         props.setRedoable(false);

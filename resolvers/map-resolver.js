@@ -234,7 +234,7 @@ module.exports = {
 
 			if(field=="name"){
 				subregions[index].flag=value+' Flag';
-				await Region.updateOne({id:regionId}, {flag:value+' Flag'});
+				await Region.updateOne({_id:regionId}, {flag:value+' Flag'});
 			}
 			
 			const isMap = await Map.findOne({_id:parentRegionId});
@@ -475,7 +475,7 @@ module.exports = {
 		},
 
 		changeParentRegion: async (_, args) => {
-			const {_id, oldParentId, newParentId, isParentMap} = args;
+			const {_id, oldParentId, newParentId, isParentMap, index} = args;
 
 			const regionId = new ObjectId(_id);
 			const newParent = new ObjectId(newParentId);
@@ -496,10 +496,14 @@ module.exports = {
 
 			const oldSubregions = oldParentFound.subregions;
 			const newSubregions = newParentFound.subregions;
-			const index = oldSubregions.findIndex(subregion => subregion._id==_id);
-			const region = oldSubregions[index];
-			oldSubregions.splice(index,1);
-			newSubregions.push(region);
+			const i = oldSubregions.findIndex(subregion => subregion._id==_id);
+			const region = oldSubregions[i];
+			oldSubregions.splice(i,1);
+			if(index!=undefined){
+				newSubregions.splice(index, 0, region);
+			}
+			else
+				newSubregions.push(region);
 			
 			if(isParentMap){
 				await Map.updateOne({_id:oldParent}, {subregions:oldSubregions});
@@ -511,8 +515,8 @@ module.exports = {
 			}
 			
 
-			if(updated) return ("The region is updated");
-			else return ("The region is not updated");
+			if(updated) return i;
+			else return -1;
 			
 		}
 

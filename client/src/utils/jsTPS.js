@@ -151,11 +151,13 @@ export class ChangeParent_Transaction extends jsTPS_Transaction{
     }
 
     async doTransaction(){
-        await this.changeFunction({variables:{_id:this.regionId, oldParentId:this.oldParentId, newParentId:this.newParentId, isParentMap:this.isParentMap}});
+        const{data} = await this.changeFunction({variables:{_id:this.regionId, oldParentId:this.oldParentId, newParentId:this.newParentId, isParentMap:this.isParentMap}});
+        this.index=data.changeParentRegion;
     }
 
     async undoTransaction(){
-        await this.changeFunction({variables:{_id:this.regionId, oldParentId:this.newParentId, newParentId:this.oldParentId, isParentMap:this.isParentMap}});
+        console.log("index", this.index);
+        await this.changeFunction({variables:{_id:this.regionId, oldParentId:this.newParentId, newParentId:this.oldParentId, isParentMap:this.isParentMap, index:this.index}});
     }
 }
 

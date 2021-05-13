@@ -100,7 +100,7 @@ export const DELETE_LANDMARK = gql`
 `;
 
 export const CHANGE_PARENT_REGION = gql`
-	mutation ChangeParentRegion($_id:String!, $oldParentId:String!, $newParentId:String!, $isParentMap:Boolean!){
-		changeParentRegion(_id:$_id, oldParentId:$oldParentId, newParentId:$newParentId, isParentMap:$isParentMap)
+	mutation ChangeParentRegion($_id:String!, $oldParentId:String!, $newParentId:String!, $isParentMap:Boolean!, $index:Int){
+		changeParentRegion(_id:$_id, oldParentId:$oldParentId, newParentId:$newParentId, isParentMap:$isParentMap, index:$index)
 	}
 `;
