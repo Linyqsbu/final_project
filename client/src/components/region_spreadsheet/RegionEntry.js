@@ -19,7 +19,7 @@ const RegionEntry = (props) => {
     }
 
     const handleCapitalEdit = async (e) => {
-        toggleEditCapital(false);
+        props.setEdit({field:'', index:-1});
         const newCapital = e.target.value;
         const prevCapital = props.subregion.capital;
         if(newCapital!=prevCapital){
@@ -29,7 +29,7 @@ const RegionEntry = (props) => {
     }
 
     const handleLeaderEdit = async (e) => {
-        toggleEditLeader(false);
+        props.setEdit({field:'', index:-1});
         const newLeader = e.target.value;
         const prevLeader = props.subregion.leader;
         if(newLeader != prevLeader){
@@ -39,7 +39,7 @@ const RegionEntry = (props) => {
     }
 
     const handleNameEdit = async (e) => {
-        toggleEditName(false);
+        props.setEdit({field:'', index:-1});
         const newName = e.target.value;
         const prevName = props.subregion.name;
         if(newName != prevName) {
@@ -61,23 +61,23 @@ const RegionEntry = (props) => {
                     <i className="material-icons region" style={{color:"brown"}}>close</i>
                 </WCol>
                 <WCol style={{cursor:"pointer"}} className="region-entry" onDoubleClick = {handleNavigate} size="2">
-                    {editName?
+                    {props.edit.field=='name' && props.edit.index==props.index?
                         <WInput style={{color:"black"}} autoFocus={true} onBlur={handleNameEdit} defaultValue={props.subregion.name} type="texted"/>:
-                        <div onClick={() => {toggleEditName(true)}}>{props.subregion.name}</div>
+                        <div onClick={() => {props.setEdit({field:'name', index:props.index});}}>{props.subregion.name}</div>
                     }
                 </WCol>
                 
                 <WCol className="region-entry" size="2">
-                    {editCapital?
+                    {props.edit.field=='capital' && props.edit.index==props.index?
                         <WInput style={{color:"black"}} autoFocus={true} onBlur={handleCapitalEdit} defaultValue={props.subregion.capital} type="texted"/>:
-                        <div onClick={() => {toggleEditCapital(true)}}>{props.subregion.capital}</div>
+                        <div onClick={() => {props.setEdit({field:'capital', index:props.index});}}>{props.subregion.capital}</div>
                     }
                 </WCol>
                 
                 <WCol className="region-entry" size="2">
-                    {editLeader?
+                    {props.edit.field=='leader' && props.edit.index==props.index?
                         <WInput style={{color:"black"}} autoFocus={true} onBlur={handleLeaderEdit} defaultValue={props.subregion.leader} type="texted"/>:
-                        <div onClick={() => {toggleEditLeader(true)}}>{props.subregion.leader}</div>
+                        <div onClick={() => {props.setEdit({field:'leader', index:props.index});}}>{props.subregion.leader}</div>
                     }
                 </WCol>
                 <WCol className="region-entry" size="2">
