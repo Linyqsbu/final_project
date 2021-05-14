@@ -4,6 +4,9 @@ const ParentRegionEntry = (props) => {
     const handleNavigate = () => {
         const newParentRegions = props.parentRegions.slice(0, props.index);
         props.setParentRegions(newParentRegions);
+        props.tps.clearAllTransactions();
+        props.setUndoable(false);
+        props.setRedoable(false);
         history.push(`/region_spreadsheet/${props.parentRegion._id}`)
 
     }

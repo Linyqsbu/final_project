@@ -10,6 +10,9 @@ const Arrows = (props) => {
     const clickDisabled = () => {}
 
     const handleNavigate = (_id) => {
+        props.tps.clearAllTransactions();
+        props.setUndoable(false);
+        props.setRedoable(false);
         history.push(`/region_viewer/${_id}`);
     }
 

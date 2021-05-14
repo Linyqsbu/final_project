@@ -16,6 +16,9 @@ const PathContainer = (props) => {
                         setParentRegions={props.setParentRegions}
                         key={props.parentRegions.indexOf(parentRegion)}
                         index={props.parentRegions.indexOf(parentRegion)}
+                        setUndoable={props.setUndoable}
+                        setRedoable={props.setRedoable}
+                        tps={props.tps}
                     />
                 </span>))
             }

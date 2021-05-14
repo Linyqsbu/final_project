@@ -7,7 +7,6 @@ import {useQuery} from '@apollo/client';
 import {useState, setState, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 const RegionSpreadsheet = (props) => {
-
     
     const history = useHistory();
     const{id} = useParams();
@@ -40,6 +39,7 @@ const RegionSpreadsheet = (props) => {
     let undoButtonColor=props.undoable? "white":"gray";
 
     useEffect(() => {
+        
         //let isMounted = true;
         if(dataP){
             props.setParentRegions(dataP.getPath);

@@ -192,12 +192,21 @@ const Screen = (props) => {
                 path={path}
                 parentRegions={parentRegions}
                 setParentRegions={setParentRegions}
+                tps={props.tps}
+                setUndoable={setUndoable}
+                setRedoable={setRedoable}
               />
             </WNavItem>
           </ul>
           <ul>
             {
-              showArrows&&(<Arrows prevSibling={prevSibling} nextSibling={nextSibling} />)
+              showArrows&&(<Arrows 
+                              prevSibling={prevSibling} 
+                              nextSibling={nextSibling} 
+                              tps={props.tps}
+                              setUndoable={setUndoable}
+                              setRedoable={setRedoable}
+                          />)
             }
           </ul>
           <ul>
