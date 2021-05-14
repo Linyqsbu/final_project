@@ -11,14 +11,19 @@ const RegionEntry = (props) => {
     //const[editName, toggleEditName] = useState(false);
     const[showDelete, toggleShowDelete] = useState(false);
 
-    let flag='';
-    try{
-        flag=require('../../flags/'+props.subregion.flag+'.png').default;
+    let flag;
+    let flagPath='';
+    
+    for(let i=0;i<props.parentRegions.length;i++){
+        flagPath+=props.parentRegions[i].name+'/';
     }
-    catch(error){
+
+    try{
+        flag=require('../../flags/'+flagPath+props.region.name+'/'+props.subregion.flag+'.png').default;
+    }
+    catch(e){
         flag=null;
     }
-    
     
 
     const handleNavigate = () => {

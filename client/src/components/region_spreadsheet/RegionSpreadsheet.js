@@ -136,6 +136,7 @@ const RegionSpreadsheet = (props) => {
                 setRedoable={props.setRedoable}
                 setUndoable={props.setUndoable}
                 isMap={isMap}
+                parentRegions={props.parentRegions}
             />
         </div>
     );

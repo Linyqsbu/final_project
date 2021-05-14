@@ -6,7 +6,7 @@ import {useHistory} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import LandmarkEntry from './LandmarkEntry';
 import ParentSelectionModal from './ParentSelectionModal';
-
+import usflag from '../../flags/The World/North America/United States Flag.png';
 const RegionViewer = (props) => {
     const undoColor = props.undoable? "white":"gray";
     const redoColor = props.redoable? "white":"gray";
@@ -26,6 +26,9 @@ const RegionViewer = (props) => {
     const{data:dataL} = useQuery(GET_CHILDREN_LANDMARKS, {variables:{_id:id}, fetchPolicy:"no-cache"});
     const{data:dataPrevSib, refetch:refetchPrev} = useQuery(GET_SIBLING, {variables:{_id:id, direction:-1}});
     const{data:dataNextSib, refetch:refetchNext} = useQuery(GET_SIBLING, {variables:{_id:id, direction:1}});
+
+    let flagPath='';
+    
     
     useEffect(() =>{
         props.toggleShowArrows(true);
@@ -54,14 +57,21 @@ const RegionViewer = (props) => {
         region = data.getRegionById;
         //landmarks=region.landmarks;
         
-        try{
-            flag=require('../../flags/'+region.flag+'.png').default;
+        if(dataP){
+            let parents=dataP.getPath;
+            for(let i=0;i<parents.length;i++){
+                flagPath=flagPath+parents[i].name+'/';
+            }
+            //flagPath=flagPath;
+            try{
+                flag=require('../../flags/'+flagPath+region.flag+'.png').default;
+            }
+            catch(e){
+                flag=null;
+            }
         }
-        catch(error){
-            flag=null;
-        }
-
-
+        
+        
         let landmarkElements = data.getRegionById.landmarks;
         for(let i=0;i<landmarkElements.length;i++){
             landmarks.push({name:landmarkElements[i], owned:true});
@@ -129,7 +139,7 @@ const RegionViewer = (props) => {
                 <i className="material-icons region-spreadsheet-button">
                     redo</i>          
             </WButton>
-            <div style={{height:"60%"}}><img src={flag} alt=''/></div>
+            <div style={{height:"60%"}}><img src={flag}/></div>
 
             <WRow style={{paddingLeft:"15px", paddingBottom:"20px"}}>
                 <span>Region Name:</span> {region.name}

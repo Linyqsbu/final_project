@@ -62,6 +62,7 @@ const TableContent = (props) => {
                         isMap={props.isMap}
                         edit={edit}
                         setEdit={setEdit}
+                        parentRegions={props.parentRegions}
                     />)
                 )
             }
