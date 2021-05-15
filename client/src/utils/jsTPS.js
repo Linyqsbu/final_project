@@ -161,6 +161,25 @@ export class ChangeParent_Transaction extends jsTPS_Transaction{
     }
 }
 
+export class EditRegion_Transaction extends jsTPS_Transaction{
+    constructor(regionId, oldLandmark, newLandmark, parentId, callback){
+        super();
+        this.regionId=regionId;
+        this.oldLandmark=oldLandmark;
+        this.newLandmark=newLandmark;
+        this.parentId=parentId;
+        this.callback=callback;
+    }
+
+    async doTransaction(){
+        await this.callback({variables:{_id:this.regionId, oldLandmark:this.oldLandmark, newLandmark:this.newLandmark, parentId:this.parentId}});
+    }
+
+    async undoTransaction(){
+        await this.callback({variables:{_id:this.regionId, oldLandmark:this.newLandmark, newLandmark:this.oldLandmark, parentId:this.parentId}});
+    }
+}
+
 
 
 

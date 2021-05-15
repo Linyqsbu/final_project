@@ -104,3 +104,9 @@ export const CHANGE_PARENT_REGION = gql`
 		changeParentRegion(_id:$_id, oldParentId:$oldParentId, newParentId:$newParentId, isParentMap:$isParentMap, index:$index)
 	}
 `;
+
+export const EDIT_LANDMARK = gql`
+	mutation EditLandmark($_id:String!, $oldLandmark:String!, $newLandmark:String!, $parentId:String!){
+		editLandmark(_id:$_id, oldLandmark:$oldLandmark, newLandmark:$newLandmark, parentId:$parentId)
+	}
+`;

@@ -6,7 +6,7 @@ import {useHistory} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import LandmarkEntry from './LandmarkEntry';
 import ParentSelectionModal from './ParentSelectionModal';
-import usflag from '../../flags/The World/North America/United States Flag.png';
+
 const RegionViewer = (props) => {
     const undoColor = props.undoable? "white":"gray";
     const redoColor = props.redoable? "white":"gray";
@@ -16,6 +16,8 @@ const RegionViewer = (props) => {
 
     const[landmarkInput, setLandmarkInput] = useState('');
     const[showSelection, toggleShowSelection] = useState(false);
+
+    
 
     
     let region = {};
@@ -31,6 +33,7 @@ const RegionViewer = (props) => {
     
     
     useEffect(() =>{
+        
         props.toggleShowArrows(true);
         if(dataP){
             props.setParentRegions(dataP.getPath);
@@ -128,6 +131,11 @@ const RegionViewer = (props) => {
         await refetch();
     }
 
+    const handleEditLandmark = async (oldLandmark, newLandmark) => {
+        await props.editLandmark(region._id, oldLandmark, newLandmark, region.parentRegionId);
+        await refetch();
+    }
+
     if(loading) return null;
     return(
         <div className="region-viewer">
@@ -166,6 +174,7 @@ const RegionViewer = (props) => {
                             landmark={landmark}
                             handleDeleteLandmark={handleDeleteLandmark}
                             key={landmarks.indexOf(landmark)}
+                            handleEditLandmark={handleEditLandmark}
                         />))
                     }
                 </div>

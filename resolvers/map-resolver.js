@@ -518,6 +518,43 @@ module.exports = {
 			if(updated) return i;
 			else return -1;
 			
+		},
+
+		editLandmark: async (_, args) => {
+			const{_id, oldLandmark, newLandmark, parentId} = args;
+			const regionId = new ObjectId(_id);
+			const parent = new ObjectId(parentId);
+			const found = await Region.findOne({_id:regionId});
+			const landmarks = found.landmarks;
+			const repeat = landmarks.find(element => element==newLandmark);
+			if(repeat) return ("Landmark with this name already exist");
+
+			const index = landmarks.findIndex(element => element==oldLandmark);
+			landmarks[index] = newLandmark;
+			
+			const updated = await Region.updateOne({_id:regionId}, {landmarks:landmarks});
+			
+			let parentFound = await Map.findOne({_id:parent});
+			let isMap=true;
+			if(!parentFound){
+				parentFound = await Region.findOne({_id:parent});
+				isMap=false;
+			}
+
+			const subregions = parentFound.subregions;
+			const regionIndex = subregions.findIndex(subregion => subregion._id==_id);
+			subregions[regionIndex].landmarks[index]=newLandmark;
+			
+			if(isMap){
+				await Map.updateOne({_id:parent}, {subregions:subregions});
+			}
+			else{
+				await Region.updateOne({_id:parent}, {subregions:subregions});
+			}
+			
+			
+			if(updated) return ("landmark updated");
+			else return ("landmark not updated");
 		}
 
 		/*

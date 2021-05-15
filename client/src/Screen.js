@@ -25,7 +25,8 @@ import {UpdateRegion_Transaction,
         AddLandmark_Transaction,
         DeleteRegion_Transaction,
         ChangeParent_Transaction,
-        DeleteLandmark_Transaction} from './utils/jsTPS';
+        DeleteLandmark_Transaction,
+        EditRegion_Transaction} from './utils/jsTPS';
 
 
 const Screen = (props) => {
@@ -43,6 +44,7 @@ const Screen = (props) => {
   const[AddLandmark] = useMutation(mutations.ADD_LANDMARK);
   const[DeleteLandmark] = useMutation(mutations.DELETE_LANDMARK);
   const[ChangeParentRegion] = useMutation(mutations.CHANGE_PARENT_REGION);
+  const[EditLandmark] = useMutation(mutations.EDIT_LANDMARK);
   
   const[activeMap, setActiveMap] = useState({});
   const[showDelete, toggleShowDelete] = useState(false);
@@ -171,6 +173,13 @@ const Screen = (props) => {
     
   }
 
+  const editLandmark = async(_id, oldLandmark, newLandmark, parentId) => {
+    //await EditLandmark({variables:{_id:_id, oldLandmark:oldLandmark, newLandmark:newLandmark, parentId:parentId}});
+    let transaction = new EditRegion_Transaction(_id, oldLandmark, newLandmark, parentId, EditLandmark);
+    props.tps.addTransaction(transaction);
+    await tpsRedo();
+  }
+
   return(
     <WLayout wLayout="header">
       <BrowserRouter>
@@ -287,6 +296,7 @@ const Screen = (props) => {
               setPrevSibling={setPrevSibling}
               setNextSibling={setNextSibling}
               changeParentRegion={changeParentRegion}
+              editLandmark={editLandmark}
             />
           </Route>
 
