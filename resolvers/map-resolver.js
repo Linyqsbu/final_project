@@ -405,7 +405,7 @@ module.exports = {
 			const repeat = landmarks.find(landmarkE => landmarkE==landmark);
 			if(repeat) return ("Landmark with this name already exists");
 			
-			if(index)
+			if(index!=undefined)
 				landmarks.splice(index,0,landmark);
 			else
 				landmarks.push(landmark);
