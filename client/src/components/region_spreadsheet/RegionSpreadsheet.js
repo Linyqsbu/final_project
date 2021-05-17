@@ -44,11 +44,28 @@ const RegionSpreadsheet = (props) => {
         if(dataP){
             props.setParentRegions(dataP.getPath);
         }
+
+        document.addEventListener('keydown', handleKeyDown);
         return (() => {
             //isMounted=false;
             props.setParentRegions([]);
+            document.removeEventListener('keydown', handleKeyDown);
         });
     })
+
+    const handleKeyDown = (e) => {
+        if(e.ctrlKey){
+			if(e.keyCode===90){
+				handleUndo();
+				
+			}
+
+			if(e.keyCode===89){
+				handleRedo();
+				
+			}
+		}
+    }
     
       
     const refetchRegion = async () =>{

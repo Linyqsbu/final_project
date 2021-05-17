@@ -47,11 +47,14 @@ const RegionViewer = (props) => {
             props.setNextSibling(dataNextSib.getSibling);
         }
 
+        document.addEventListener('keydown', handleKeyDown);
+
         return(() => {
             props.toggleShowArrows(false);
             props.setParentRegions([]);
             props.setPrevSibling('');
             props.setNextSibling('');
+            document.removeEventListener('keydown', handleKeyDown);
         });
     })
 
@@ -89,7 +92,18 @@ const RegionViewer = (props) => {
         
     }
 
-    
+    const handleKeyDown = (e) => {
+        if(e.ctrlKey){
+			if(e.keyCode===90){
+				handleUndo();
+			}
+
+			if(e.keyCode===89){
+				handleRedo();
+				
+			}
+		}
+    }
     
     const handleNavigate = () => {
         const parent = props.parentRegions[props.parentRegions.length-1];
