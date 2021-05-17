@@ -6,7 +6,7 @@ const ParentSelectionModal = (props) => {
     const isParentMap = map!==undefined;
     let parentSiblings=[];
 
-    const {data} = useQuery(GET_ALL_SIBLINGS, {variables:{_id:props.region.parentRegionId}, fetchPolicy:"no-cache", skip:isParentMap});
+    const {data, refetch:refetchS} = useQuery(GET_ALL_SIBLINGS, {variables:{_id:props.region.parentRegionId}, skip:isParentMap});
 
     if(isParentMap){
         parentSiblings=props.maps;
@@ -39,6 +39,7 @@ const ParentSelectionModal = (props) => {
                                                         refetchPath={props.refetchPath}
                                                         refetchNext={props.refetchNext}
                                                         refetchPrev={props.refetchPrev}
+                                                        refetchS={refetchS}
                                                     />))
                 }
             </WMMain>
@@ -54,6 +55,7 @@ const ParentSiblingEntry = (props) => {
         await props.refetchPath();
         await props.refetchPrev();
         await props.refetchNext();
+        await props.refetchS();
     }
     
     return(props.sibling._id==props.region.parentRegionId? null:
