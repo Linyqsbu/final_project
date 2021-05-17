@@ -297,6 +297,8 @@ const Screen = (props) => {
               setNextSibling={setNextSibling}
               changeParentRegion={changeParentRegion}
               editLandmark={editLandmark}
+              setRedoable={setRedoable}
+              setUndoable={setUndoable}
             />
           </Route>
 

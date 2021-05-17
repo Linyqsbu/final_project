@@ -109,6 +109,9 @@ const RegionViewer = (props) => {
         const parent = props.parentRegions[props.parentRegions.length-1];
         const newParentRegions = props.parentRegions.slice(0,props.parentRegions.length-1);
         props.setParentRegions(newParentRegions);
+        props.tps.clearAllTransactions();
+        props.setRedoable(false);
+        props.setUndoable(false);
         history.push(`/region_spreadsheet/${parent._id}`);
     }
 
